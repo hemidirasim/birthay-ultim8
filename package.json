@@ -22,7 +22,6 @@
   "homepage": "https://github.com/hemidirasim/birthay-ultim8#readme",
   "dependencies": {
     "express": "^5.1.0",
-    "multer": "^2.0.2",
     "vite": "^7.1.5"
   }
 }
