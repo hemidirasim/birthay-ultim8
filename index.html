@@ -159,6 +159,43 @@
       background: linear-gradient(135deg, #f8f9fa, #ffffff);
     }
     
+    /* Past birthday styling */
+    .past-birthday td {
+      background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+      color: #666;
+      opacity: 0.8;
+    }
+    .past-birthday:hover td {
+      background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    }
+    
+    /* Future birthday styling */
+    .future-birthday td {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      color: #856404;
+      font-weight: bold;
+    }
+    .future-birthday:hover td {
+      background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+    }
+    
+    /* Today's birthday styling */
+    .today-birthday td {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      font-weight: bold;
+      animation: pulse 2s infinite;
+    }
+    .today-birthday:hover td {
+      background: linear-gradient(135deg, #ee5a24, #d63031);
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    
     /* Edit form modal */
     .modal {
       display: none;
@@ -268,6 +305,11 @@
           <th>Ad və Soyad</th>
           <th>Doğum Tarixi</th>
           <th>Əməliyyat</th>
+        </tr>
+        <tr style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-size: 12px; color: #666;">
+          <th colspan="4" style="text-align: center; padding: 8px;">
+            🎉 Bu gün | ⏰ Gələcək | ✅ Keçmiş | 📝 Tarix yoxdur
+          </th>
         </tr>
       </thead>
       <tbody id="birthdayBody">
@@ -380,6 +422,33 @@
       return `${day}.${month}.${year}`;
     }
 
+    // Get birthday status (past, future, today)
+    function getBirthdayStatus(dateString) {
+      if (!dateString) return 'empty';
+      
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      
+      // Create birthday date for current year
+      const birthdayDate = new Date(dateString);
+      birthdayDate.setFullYear(currentYear);
+      
+      // Reset time to start of day for accurate comparison
+      today.setHours(0, 0, 0, 0);
+      birthdayDate.setHours(0, 0, 0, 0);
+      
+      const timeDiff = birthdayDate.getTime() - today.getTime();
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      
+      if (daysDiff === 0) {
+        return 'today';
+      } else if (daysDiff < 0) {
+        return 'past';
+      } else {
+        return 'future';
+      }
+    }
+
     // Render the table
     function renderTable() {
       const tbody = document.getElementById('birthdayBody');
@@ -388,10 +457,21 @@
       birthdays.forEach((birthday, index) => {
         const row = tbody.insertRow();
         const formattedDate = formatDate(birthday.date);
+        const status = getBirthdayStatus(birthday.date);
+        
+        // Add status emoji
+        let statusEmoji = '';
+        if (status === 'today') {
+          statusEmoji = ' 🎉';
+        } else if (status === 'future') {
+          statusEmoji = ' ⏰';
+        } else if (status === 'past') {
+          statusEmoji = ' ✅';
+        }
         
         row.innerHTML = `
           <td>${index + 1}</td>
-          <td>${birthday.name}</td>
+          <td>${birthday.name}${statusEmoji}</td>
           <td>${formattedDate}</td>
           <td>
             <div class="action-buttons">
@@ -401,8 +481,11 @@
           </td>
         `;
         
+        // Add appropriate CSS class based on status
         if (!birthday.date) {
           row.classList.add('empty-row');
+        } else {
+          row.classList.add(`${status}-birthday`);
         }
       });
     }
