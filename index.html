@@ -287,11 +287,6 @@
   <div class="container">
     <h1>🎉 Doğum Günləri 🎉</h1>
     
-    <!-- Debug Section -->
-    <div style="text-align: center; margin-bottom: 20px;">
-      <button onclick="downloadData()" style="background: #2ed573; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px;">📥 JSON Faylını Yüklə</button>
-      <button onclick="reloadData()" style="background: #1e90ff; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px;">🔄 Məlumatları Yenilə</button>
-    </div>
     
     <!-- Add New Entry Form -->
     <div class="add-form">
@@ -359,7 +354,6 @@
         const response = await fetch('data.json');
         if (response.ok) {
           birthdays = await response.json();
-          console.log('Loaded data from JSON file:', birthdays);
         } else {
           throw new Error('Failed to load JSON file');
         }
@@ -403,7 +397,6 @@
         link.click();
         document.body.removeChild(link);
         
-        console.log('Data saved to JSON file:', birthdays);
         showNotification('Məlumatlar JSON faylına yükləndi!', 'success');
       } catch (error) {
         console.error('Error saving to JSON file:', error);
@@ -503,9 +496,6 @@
       
       const newBirthday = { name, date };
       birthdays.push(newBirthday);
-      console.log('Added new birthday:', newBirthday);
-      console.log('Current birthdays array:', birthdays);
-      console.log('Array length:', birthdays.length);
       
       // Save to JSON file
       saveData();
@@ -651,16 +641,6 @@
       }
     }
 
-    // Debug functions
-    function downloadData() {
-      saveData();
-    }
-    
-    async function reloadData() {
-      await loadData();
-      renderTable();
-      showNotification('Məlumatlar yeniləndi!', 'success');
-    }
 
     // Initialize the application when page loads
     document.addEventListener('DOMContentLoaded', init);
