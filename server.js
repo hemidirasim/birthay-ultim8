@@ -50,4 +50,7 @@ app.delete("/birthdays/:id", (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server http://localhost:${PORT} ünvanında işlədi`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server http://localhost:${PORT} ünvanında işlədi`);
+  console.log(`Network access: http://[YOUR_IP]:${PORT}`);
+});
