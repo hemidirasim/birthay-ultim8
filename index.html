@@ -287,6 +287,12 @@
   <div class="container">
     <h1>🎉 Doğum Günləri 🎉</h1>
     
+    <!-- Export/Import Section -->
+    <div style="text-align: center; margin-bottom: 20px;">
+      <button onclick="exportData()" style="background: #2ed573; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; margin-right: 10px;">📤 JSON Faylını Yüklə</button>
+      <button onclick="document.getElementById('fileInput').click()" style="background: #1e90ff; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px;">📥 JSON Faylını Yüklə</button>
+      <input type="file" id="fileInput" style="display: none;" accept=".json" onchange="importData(event)">
+    </div>
     
     <!-- Add New Entry Form -->
     <div class="add-form">
@@ -643,6 +649,51 @@
       }
     }
 
+
+    // Export data to JSON file
+    function exportData() {
+      try {
+        const dataStr = JSON.stringify(birthdays, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = 'dogum_gunleri.json';
+        link.click();
+        
+        showNotification('JSON faylı uğurla yükləndi!', 'success');
+      } catch (error) {
+        console.error('Error exporting data:', error);
+        showNotification('JSON faylı yüklənərkən xəta baş verdi!', 'error');
+      }
+    }
+
+    // Import data from JSON file
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          if (Array.isArray(importedData)) {
+            birthdays = importedData;
+            saveData();
+            renderTable();
+            showNotification('JSON faylı uğurla yükləndi!', 'success');
+          } else {
+            throw new Error('Invalid data format');
+          }
+        } catch (error) {
+          alert('JSON faylı düzgün formatda deyil!');
+        }
+      };
+      reader.readAsText(file);
+      
+      // Reset file input
+      event.target.value = '';
+    }
 
     // Initialize the application when page loads
     document.addEventListener('DOMContentLoaded', init);
