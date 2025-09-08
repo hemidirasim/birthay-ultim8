@@ -54,8 +54,9 @@ export default function handler(req, res) {
       res.status(201).json(newBirthday);
     } 
     else if (req.method === 'PUT') {
-      // Update birthday
-      const { id } = req.query;
+      // Update birthday - extract id from URL path
+      const urlParts = req.url.split('/');
+      const id = urlParts[urlParts.length - 1];
       const { name, birthday } = req.body;
       
       const index = birthdays.findIndex(b => b.id == id);
@@ -67,8 +68,9 @@ export default function handler(req, res) {
       res.status(200).json(birthdays[index]);
     } 
     else if (req.method === 'DELETE') {
-      // Delete birthday
-      const { id } = req.query;
+      // Delete birthday - extract id from URL path
+      const urlParts = req.url.split('/');
+      const id = urlParts[urlParts.length - 1];
       
       const index = birthdays.findIndex(b => b.id == id);
       if (index === -1) {
