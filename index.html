@@ -41,6 +41,41 @@
       flex-wrap: wrap;
     }
     
+    .date-inputs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .date-select, .date-input {
+      padding: 8px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+      transition: all 0.3s ease;
+      min-width: 80px;
+    }
+    
+    .date-select {
+      cursor: pointer;
+    }
+    
+    .date-input {
+      width: 80px;
+    }
+    
+    .date-select:focus, .date-input:focus {
+      outline: none;
+      border-color: #f05454;
+      box-shadow: 0 0 0 3px rgba(240, 84, 84, 0.1);
+    }
+    
+    .date-select:hover, .date-input:hover {
+      border-color: #d0d0d0;
+    }
+    
     .add-form input { 
       padding: 12px 15px;
       border: none;
@@ -319,6 +354,18 @@
         margin-bottom: 10px;
       }
       
+      .date-inputs {
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      
+      .date-select, .date-input {
+        flex: 1;
+        min-width: 70px;
+        max-width: 100px;
+      }
+      
       .add-form button {
         width: 100%;
       }
@@ -381,7 +428,58 @@
     <h3>🎂 Yeni Doğum Günü Əlavə Et</h3>
     <div class="form-row">
       <input type="text" id="name" placeholder="Ad və Soyad">
-      <input type="date" id="birthday">
+      <div class="date-inputs">
+        <select id="day" class="date-select">
+          <option value="">Gün</option>
+          <option value="01">01</option>
+          <option value="02">02</option>
+          <option value="03">03</option>
+          <option value="04">04</option>
+          <option value="05">05</option>
+          <option value="06">06</option>
+          <option value="07">07</option>
+          <option value="08">08</option>
+          <option value="09">09</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+          <option value="21">21</option>
+          <option value="22">22</option>
+          <option value="23">23</option>
+          <option value="24">24</option>
+          <option value="25">25</option>
+          <option value="26">26</option>
+          <option value="27">27</option>
+          <option value="28">28</option>
+          <option value="29">29</option>
+          <option value="30">30</option>
+          <option value="31">31</option>
+        </select>
+        <select id="month" class="date-select">
+          <option value="">Ay</option>
+          <option value="01">Yanvar</option>
+          <option value="02">Fevral</option>
+          <option value="03">Mart</option>
+          <option value="04">Aprel</option>
+          <option value="05">May</option>
+          <option value="06">İyun</option>
+          <option value="07">İyul</option>
+          <option value="08">Avqust</option>
+          <option value="09">Sentyabr</option>
+          <option value="10">Oktyabr</option>
+          <option value="11">Noyabr</option>
+          <option value="12">Dekabr</option>
+        </select>
+        <input type="number" id="year" class="date-input" placeholder="İl" min="1900" max="2100">
+      </div>
       <button onclick="addBirthday()">➕ Əlavə Et</button>
     </div>
   </div>
@@ -417,7 +515,58 @@
         <input type="text" id="editName" placeholder="Ad və Soyad">
       </div>
       <div class="form-row">
-        <input type="date" id="editDate">
+        <div class="date-inputs">
+          <select id="editDay" class="date-select">
+            <option value="">Gün</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+          </select>
+          <select id="editMonth" class="date-select">
+            <option value="">Ay</option>
+            <option value="01">Yanvar</option>
+            <option value="02">Fevral</option>
+            <option value="03">Mart</option>
+            <option value="04">Aprel</option>
+            <option value="05">May</option>
+            <option value="06">İyun</option>
+            <option value="07">İyul</option>
+            <option value="08">Avqust</option>
+            <option value="09">Sentyabr</option>
+            <option value="10">Oktyabr</option>
+            <option value="11">Noyabr</option>
+            <option value="12">Dekabr</option>
+          </select>
+          <input type="number" id="editYear" class="date-input" placeholder="İl" min="1900" max="2100">
+        </div>
       </div>
       <button class="save-btn" onclick="saveEdit()">💾 Saxla</button>
     </div>
@@ -486,11 +635,16 @@
 
     async function addBirthday() {
       const name = document.getElementById("name").value;
-      const birthday = document.getElementById("birthday").value;
-      if (!name || !birthday) {
-        showNotification('Xahiş olunur ad və tarix daxil edin!', 'error');
+      const day = document.getElementById("day").value;
+      const month = document.getElementById("month").value;
+      const year = document.getElementById("year").value;
+      
+      if (!name || !day || !month || !year) {
+        showNotification('Xahiş olunur ad və tam tarix daxil edin!', 'error');
         return;
       }
+      
+      const birthday = `${day}.${month}.${year}`;
       
       try {
         const formattedDate = formatDateForDisplay(birthday);
@@ -505,7 +659,9 @@
         // Update UI immediately
         renderTable(localData);
         document.getElementById("name").value = "";
-        document.getElementById("birthday").value = "";
+        document.getElementById("day").value = "";
+        document.getElementById("month").value = "";
+        document.getElementById("year").value = "";
         showNotification('Doğum günü uğurla əlavə edildi!', 'success');
         
         // Try to sync with server
@@ -535,7 +691,20 @@
         const birthday = data[index];
         
         document.getElementById('editName').value = birthday.name;
-        document.getElementById('editDate').value = birthday.birthday ? formatDateForInput(birthday.birthday) : '';
+        
+        // Parse birthday date
+        if (birthday.birthday && birthday.birthday !== "Tarix əlavə edilməyib") {
+          const parts = birthday.birthday.split('.');
+          if (parts.length === 3) {
+            document.getElementById('editDay').value = parts[0].padStart(2, '0');
+            document.getElementById('editMonth').value = parts[1].padStart(2, '0');
+            document.getElementById('editYear').value = parts[2];
+          }
+        } else {
+          document.getElementById('editDay').value = "";
+          document.getElementById('editMonth').value = "";
+          document.getElementById('editYear').value = "";
+        }
         
         document.getElementById('editModal').style.display = 'block';
       });
@@ -543,7 +712,9 @@
 
     async function saveEdit() {
       const name = document.getElementById('editName').value.trim();
-      const date = document.getElementById('editDate').value;
+      const day = document.getElementById('editDay').value;
+      const month = document.getElementById('editMonth').value;
+      const year = document.getElementById('editYear').value;
       
       if (!name) {
         showNotification('Xahiş olunur ad daxil edin!', 'error');
@@ -553,7 +724,7 @@
       try {
         const data = JSON.parse(localStorage.getItem('birthdays') || '[]');
         const birthday = data[editingIndex];
-        const formattedDate = date ? formatDateForDisplay(date) : '';
+        const formattedDate = (day && month && year) ? `${day}.${month}.${year}` : '';
         
         // Update localStorage immediately
         data[editingIndex] = { ...birthday, name, birthday: formattedDate };
@@ -587,6 +758,10 @@
 
     function closeModal() {
       document.getElementById('editModal').style.display = 'none';
+      document.getElementById('editName').value = '';
+      document.getElementById('editDay').value = '';
+      document.getElementById('editMonth').value = '';
+      document.getElementById('editYear').value = '';
       editingIndex = -1;
     }
 
