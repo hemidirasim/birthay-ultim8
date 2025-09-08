@@ -1,6 +1,22 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+// In-memory storage for birthdays
+let birthdays = [
+  {"id":1,"name":"Günay Hacıyeva","birthday":"07.09.1999"},
+  {"id":2,"name":"Aytan Nazarova","birthday":"13.02.1998"},
+  {"id":3,"name":"Günel Hüseynzade","birthday":"12.01.2001"},
+  {"id":4,"name":"Aysel Sərkərli","birthday":"12.12.1997"},
+  {"id":5,"name":"Narmin Asadova","birthday":"15.09.1993"},
+  {"id":6,"name":"Parvana","birthday":"20.06.1988"},
+  {"id":7,"name":"Aysel Qarayeva","birthday":""},
+  {"id":8,"name":"Rasim Ağazade","birthday":"12.11.1985"},
+  {"id":9,"name":"Baba Ağayev","birthday":"03.11.1989"},
+  {"id":10,"name":"Rasim Həmidi","birthday":"19.02.1994"},
+  {"id":11,"name":"Kənan Dadaşov","birthday":"01.06.1995"},
+  {"id":12,"name":"Nicat","birthday":""},
+  {"id":13,"name":"Elnur","birthday":"19.10.1994"},
+  {"id":14,"name":"Emin","birthday":""},
+  {"id":15,"name":"Aytac","birthday":"08.03.2000"},
+  {"id":1757329798171,"name":"Nərgiz","birthday":"05.05.1995"}
+];
 
 export default function handler(req, res) {
   // Enable CORS
@@ -20,27 +36,27 @@ export default function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      // Return all birthdays from database
-      const birthdays = await prisma.birthday.findMany({
-        orderBy: { id: 'asc' }
-      });
+      // Return all birthdays from memory
       res.status(200).json(birthdays);
     } 
     else if (req.method === 'POST') {
-      // Add new birthday to database
+      // Add new birthday to memory
       const { name, birthday } = req.body;
       if (!name) {
         return res.status(400).json({ error: 'Name is required' });
       }
       
-      const newBirthday = await prisma.birthday.create({
-        data: { name, birthday: birthday || '' }
-      });
+      const newBirthday = {
+        id: Date.now(),
+        name,
+        birthday: birthday || ''
+      };
       
+      birthdays.push(newBirthday);
       res.status(201).json(newBirthday);
     } 
     else if (req.method === 'PUT') {
-      // Update birthday in database
+      // Update birthday in memory
       const urlParts = req.url.split('/');
       const id = parseInt(urlParts[urlParts.length - 1]);
       const { name, birthday } = req.body;
@@ -49,15 +65,16 @@ export default function handler(req, res) {
         return res.status(400).json({ error: 'Valid ID is required' });
       }
       
-      const updatedBirthday = await prisma.birthday.update({
-        where: { id },
-        data: { name, birthday: birthday || '' }
-      });
+      const index = birthdays.findIndex(b => b.id === id);
+      if (index === -1) {
+        return res.status(404).json({ error: 'Birthday not found' });
+      }
       
-      res.status(200).json(updatedBirthday);
+      birthdays[index] = { ...birthdays[index], name, birthday: birthday || '' };
+      res.status(200).json(birthdays[index]);
     } 
     else if (req.method === 'DELETE') {
-      // Delete birthday from database
+      // Delete birthday from memory
       const urlParts = req.url.split('/');
       const id = parseInt(urlParts[urlParts.length - 1]);
       
@@ -65,10 +82,12 @@ export default function handler(req, res) {
         return res.status(400).json({ error: 'Valid ID is required' });
       }
       
-      await prisma.birthday.delete({
-        where: { id }
-      });
+      const index = birthdays.findIndex(b => b.id === id);
+      if (index === -1) {
+        return res.status(404).json({ error: 'Birthday not found' });
+      }
       
+      birthdays.splice(index, 1);
       res.status(200).json({ message: 'Birthday deleted' });
     } 
     else {
@@ -77,7 +96,5 @@ export default function handler(req, res) {
   } catch (error) {
     console.error('API Error:', error);
     res.status(500).json({ error: 'Internal server error: ' + error.message });
-  } finally {
-    await prisma.$disconnect();
   }
 }
