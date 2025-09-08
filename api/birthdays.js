@@ -1,25 +1,6 @@
-const fs = require('fs');
-const path = require('path');
+import { PrismaClient } from '@prisma/client';
 
-// In-memory storage for Vercel (since file system is read-only)
-let birthdays = [
-  {"id":1,"name":"Günay Hacıyeva","birthday":"07.09.1999"},
-  {"id":2,"name":"Aytan Nazarova","birthday":"13.02.1998"},
-  {"id":3,"name":"Günel Hüseynzade","birthday":"12.01.2001"},
-  {"id":4,"name":"Aysel Sərkərli","birthday":"12.12.1997"},
-  {"id":5,"name":"Narmin Asadova","birthday":"15.09.1993"},
-  {"id":6,"name":"Parvana","birthday":"20.06.1988"},
-  {"id":7,"name":"Aysel Qarayeva","birthday":""},
-  {"id":8,"name":"Rasim Ağazade","birthday":"12.11.1985"},
-  {"id":9,"name":"Baba Ağayev","birthday":"03.11.1989"},
-  {"id":10,"name":"Rasim Həmidi","birthday":"19.02.1994"},
-  {"id":11,"name":"Kənan Dadaşov","birthday":"01.06.1995"},
-  {"id":12,"name":"Nicat","birthday":""},
-  {"id":13,"name":"Elnur","birthday":"19.10.1994"},
-  {"id":14,"name":"Emin","birthday":""},
-  {"id":15,"name":"Aytac","birthday":"08.03.2000"},
-  {"id":1757329798171,"name":"Nərgiz","birthday":"05.05.1995"}
-];
+const prisma = new PrismaClient();
 
 export default function handler(req, res) {
   // Enable CORS
@@ -39,61 +20,55 @@ export default function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      // Return all birthdays
+      // Return all birthdays from database
+      const birthdays = await prisma.birthday.findMany({
+        orderBy: { id: 'asc' }
+      });
       res.status(200).json(birthdays);
     } 
     else if (req.method === 'POST') {
-      // Add new birthday
+      // Add new birthday to database
       const { name, birthday } = req.body;
-      if (!name || !birthday) {
-        return res.status(400).json({ error: 'Name and birthday are required' });
+      if (!name) {
+        return res.status(400).json({ error: 'Name is required' });
       }
       
-      const newBirthday = {
-        id: Date.now(),
-        name,
-        birthday
-      };
+      const newBirthday = await prisma.birthday.create({
+        data: { name, birthday: birthday || '' }
+      });
       
-      birthdays.push(newBirthday);
       res.status(201).json(newBirthday);
     } 
     else if (req.method === 'PUT') {
-      // Update birthday - extract id from URL path
+      // Update birthday in database
       const urlParts = req.url.split('/');
-      const id = urlParts[urlParts.length - 1];
+      const id = parseInt(urlParts[urlParts.length - 1]);
       const { name, birthday } = req.body;
       
-      console.log('PUT - ID:', id);
-      console.log('PUT - Name:', name);
-      console.log('PUT - Birthday:', birthday);
-      
-      if (!id) {
-        return res.status(400).json({ error: 'ID is required' });
+      if (!id || isNaN(id)) {
+        return res.status(400).json({ error: 'Valid ID is required' });
       }
       
-      const index = birthdays.findIndex(b => b.id == id);
-      console.log('PUT - Found index:', index);
+      const updatedBirthday = await prisma.birthday.update({
+        where: { id },
+        data: { name, birthday: birthday || '' }
+      });
       
-      if (index === -1) {
-        return res.status(404).json({ error: 'Birthday not found' });
-      }
-      
-      birthdays[index] = { ...birthdays[index], name, birthday };
-      console.log('PUT - Updated birthday:', birthdays[index]);
-      res.status(200).json(birthdays[index]);
+      res.status(200).json(updatedBirthday);
     } 
     else if (req.method === 'DELETE') {
-      // Delete birthday - extract id from URL path
+      // Delete birthday from database
       const urlParts = req.url.split('/');
-      const id = urlParts[urlParts.length - 1];
+      const id = parseInt(urlParts[urlParts.length - 1]);
       
-      const index = birthdays.findIndex(b => b.id == id);
-      if (index === -1) {
-        return res.status(404).json({ error: 'Birthday not found' });
+      if (!id || isNaN(id)) {
+        return res.status(400).json({ error: 'Valid ID is required' });
       }
       
-      birthdays.splice(index, 1);
+      await prisma.birthday.delete({
+        where: { id }
+      });
+      
       res.status(200).json({ message: 'Birthday deleted' });
     } 
     else {
@@ -101,6 +76,8 @@ export default function handler(req, res) {
     }
   } catch (error) {
     console.error('API Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error: ' + error.message });
+  } finally {
+    await prisma.$disconnect();
   }
 }
