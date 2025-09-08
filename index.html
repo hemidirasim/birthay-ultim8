@@ -308,10 +308,13 @@
 
     // Load data from localStorage or use default data
     function loadData() {
-      const savedData = localStorage.getItem('birthdays');
-      if (savedData) {
-        birthdays = JSON.parse(savedData);
-      } else {
+      try {
+        const savedData = localStorage.getItem('birthdays');
+        console.log('Loaded data from localStorage:', savedData);
+        if (savedData) {
+          birthdays = JSON.parse(savedData);
+          console.log('Parsed birthdays:', birthdays);
+        } else {
         // Default data
         birthdays = [
           { name: "Günay Hacıyeva", date: "1999-09-07" },
@@ -331,12 +334,38 @@
           { name: "Aytac", date: "" }
         ];
         saveData();
+        }
+      } catch (error) {
+        console.error('Error loading from localStorage:', error);
+        // Fallback to default data
+        birthdays = [
+          { name: "Günay Hacıyeva", date: "1999-09-07" },
+          { name: "Aytan Nazarova", date: "1998-02-13" },
+          { name: "Günel Hüseynzade", date: "2001-01-12" },
+          { name: "Aysel Şərkerli", date: "1997-12-12" },
+          { name: "Narmin Asadova", date: "1993-09-15" },
+          { name: "Parvana", date: "1988-06-20" },
+          { name: "Aysel Qarayevа", date: "" },
+          { name: "Rasim Ağazade", date: "1985-11-12" },
+          { name: "Baba Ağayev", date: "1989-11-03" },
+          { name: "Rasim Həmidi", date: "1994-02-19" },
+          { name: "Kenan Dadaşov", date: "" },
+          { name: "Nicat", date: "" },
+          { name: "Elnur", date: "" },
+          { name: "Emin", date: "" },
+          { name: "Aytac", date: "" }
+        ];
       }
     }
 
     // Save data to localStorage
     function saveData() {
-      localStorage.setItem('birthdays', JSON.stringify(birthdays));
+      try {
+        localStorage.setItem('birthdays', JSON.stringify(birthdays));
+        console.log('Data saved to localStorage:', birthdays);
+      } catch (error) {
+        console.error('Error saving to localStorage:', error);
+      }
     }
 
     // Format date for display
@@ -388,7 +417,11 @@
         return;
       }
       
-      birthdays.push({ name, date });
+      const newBirthday = { name, date };
+      birthdays.push(newBirthday);
+      console.log('Added new birthday:', newBirthday);
+      console.log('Current birthdays array:', birthdays);
+      
       saveData();
       renderTable();
       
