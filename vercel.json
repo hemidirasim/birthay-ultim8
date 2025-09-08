@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/save.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/save",
+      "dest": "/api/save.js"
+    }
+  ]
+}
