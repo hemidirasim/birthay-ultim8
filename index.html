@@ -2,672 +2,105 @@
 <html lang="az">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Doğum Günləri</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      backdrop-filter: blur(10px);
-    }
-    h1 {
-      text-align: center;
-      color: #d32f2f;
-      margin-bottom: 30px;
-      font-size: 2.5em;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    /* Add New Entry Form */
-    .add-form {
-      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-      padding: 25px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 25px rgba(238, 90, 36, 0.3);
-    }
-    .add-form h3 {
-      color: white;
-      margin-top: 0;
-      text-align: center;
-      font-size: 1.4em;
-    }
-    .form-row {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-    }
-    .form-row input {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-      min-width: 200px;
-    }
-    .form-row input:focus {
-      outline: none;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.3);
-    }
-    .add-btn {
-      background: linear-gradient(135deg, #2ed573, #1e90ff);
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
-    }
-    .add-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
-    }
-    
-    /* Table Styles */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    thead {
-      background: linear-gradient(135deg, #d32f2f, #f44336);
-      color: #fff;
-    }
-    thead th {
-      padding: 18px 12px;
-      text-align: center;
-      font-size: 16px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    tbody td {
-      padding: 15px 10px;
-      text-align: center;
-      font-size: 15px;
-      border-bottom: 1px solid #f0f0f0;
-      position: relative;
-    }
-    tbody tr:nth-child(even) {
-      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    }
-    tbody tr:hover {
-      background: linear-gradient(135deg, #ffe0e0, #ffcccb);
-      transform: scale(1.02);
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    .emoji {
-      font-size: 18px;
-      margin-left: 5px;
-    }
-    
-    /* Action buttons */
-    .action-buttons {
-      display: flex;
-      gap: 5px;
-      justify-content: center;
-    }
-    .edit-btn, .delete-btn {
-      border: none;
-      padding: 6px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.3s ease;
-    }
-    .edit-btn {
-      background: linear-gradient(135deg, #ffa726, #ff9800);
-      color: white;
-    }
-    .edit-btn:hover {
-      background: linear-gradient(135deg, #ff9800, #f57c00);
-      transform: scale(1.1);
-    }
-    .delete-btn {
-      background: linear-gradient(135deg, #ff4757, #ff3838);
-      color: white;
-    }
-    .delete-btn:hover {
-      background: linear-gradient(135deg, #ff3838, #ff2f2f);
-      transform: scale(1.1);
-    }
-    
-    /* Empty row styling */
-    .empty-row td {
-      color: #999;
-      font-style: italic;
-      background: linear-gradient(135deg, #f8f9fa, #ffffff);
-    }
-    
-    /* Past birthday styling */
-    .past-birthday td {
-      background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
-      color: #666;
-      opacity: 0.8;
-    }
-    .past-birthday:hover td {
-      background: linear-gradient(135deg, #d4edda, #c3e6cb);
-    }
-    
-    /* Future birthday styling */
-    .future-birthday td {
-      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-      color: #856404;
-      font-weight: bold;
-    }
-    .future-birthday:hover td {
-      background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
-    }
-    
-    /* Today's birthday styling */
-    .today-birthday td {
-      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-      color: white;
-      font-weight: bold;
-      animation: pulse 2s infinite;
-    }
-    .today-birthday:hover td {
-      background: linear-gradient(135deg, #ee5a24, #d63031);
-    }
-    
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-      100% { transform: scale(1); }
-    }
-    
-    /* Edit form modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      backdrop-filter: blur(5px);
-    }
-    .modal-content {
-      background-color: #fefefe;
-      margin: 15% auto;
-      padding: 30px;
-      border-radius: 15px;
-      width: 80%;
-      max-width: 500px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .close:hover {
-      color: #000;
-    }
-    .modal h3 {
-      margin-top: 0;
-      color: #d32f2f;
-      text-align: center;
-    }
-    .modal .form-row {
-      margin-bottom: 20px;
-    }
-    .modal .form-row input {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    .modal .form-row input:focus {
-      border-color: #d32f2f;
-      outline: none;
-    }
-    .save-btn {
-      background: linear-gradient(135deg, #4caf50, #45a049);
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      width: 100%;
-      transition: all 0.3s ease;
-    }
-    .save-btn:hover {
-      background: linear-gradient(135deg, #45a049, #3d8b40);
-    }
-    
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .form-row {
-        flex-direction: column;
-      }
-      .form-row input {
-        min-width: auto;
-      }
-      table {
-        font-size: 14px;
-      }
-      thead th, tbody td {
-        padding: 10px 5px;
-      }
-      h1 {
-        font-size: 2em;
-      }
-    }
+    body { font-family: Arial, sans-serif; background: #f8f8f8; }
+    h2 { text-align: center; }
+    table { width: 80%; margin: auto; border-collapse: collapse; background: #fff; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+    th { background: #f05454; color: #fff; }
+    .btn { padding: 5px 10px; border: none; cursor: pointer; }
+    .edit { background: orange; color: #fff; }
+    .delete { background: red; color: #fff; }
+    .add-form { text-align: center; margin: 20px; }
+    .add-form input { padding: 5px; }
+    .add-form button { padding: 6px 12px; background: green; color: #fff; border: none; cursor: pointer; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎉 Doğum Günləri 🎉</h1>
-    
-    
-    <!-- Add New Entry Form -->
-    <div class="add-form">
-      <h3>🎂 Yeni Doğum Günü Əlavə Et</h3>
-      <div class="form-row">
-        <input type="text" id="newName" placeholder="Ad və Soyad" maxlength="50">
-        <input type="date" id="newDate">
-        <button class="add-btn" onclick="addBirthday()">➕ Əlavə Et</button>
-      </div>
-    </div>
-    
-    <table id="birthdayTable">
-      <thead>
-        <tr>
-          <th>№</th>
-          <th>Ad və Soyad</th>
-          <th>Doğum Tarixi</th>
-          <th>Əməliyyat</th>
-        </tr>
-        <tr style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-size: 12px; color: #666;">
-          <th colspan="4" style="text-align: center; padding: 8px;">
-            🎉 Bu gün | ⏰ Gələcək | ✅ Keçmiş | 📝 Tarix yoxdur
-          </th>
-        </tr>
-      </thead>
-      <tbody id="birthdayBody">
-        <!-- Data will be loaded here -->
-      </tbody>
-    </table>
-    
-    <!-- Footer -->
-    <div style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 14px;">
-      Created by <a href="https://midiya.az/" target="_blank" style="color: #d32f2f; text-decoration: none; font-weight: bold;">@https://midiya.az/</a>
-    </div>
+
+  <h2>🎂 Doğum Günləri Cədvəli</h2>
+
+  <div class="add-form">
+    <input type="text" id="name" placeholder="Ad Soyad">
+    <input type="text" id="birthday" placeholder="dd.mm.yyyy">
+    <button onclick="addBirthday()">Əlavə Et</button>
   </div>
 
-  <!-- Edit Modal -->
-  <div id="editModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h3>✏️ Doğum Gününü Redaktə Et</h3>
-      <div class="form-row">
-        <input type="text" id="editName" placeholder="Ad və Soyad" maxlength="50">
-      </div>
-      <div class="form-row">
-        <input type="date" id="editDate">
-      </div>
-      <button class="save-btn" onclick="saveEdit()">💾 Saxla</button>
-    </div>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Ad və Soyad</th>
+        <th>Doğum Tarixi</th>
+        <th>Əməliyyat</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
 
   <script>
-    let birthdays = [];
-    let editingIndex = -1;
+    const API_URL = "http://localhost:3000/birthdays";
 
-    // Initialize the application
-    function init() {
-      loadData();
-      renderTable();
-    }
-
-    // Load data from localStorage or JSON file
     async function loadData() {
-      try {
-        // First try localStorage
-        const savedData = localStorage.getItem('birthdays');
-        if (savedData) {
-          birthdays = JSON.parse(savedData);
-          return;
-        }
-        
-        // If no localStorage, try JSON file
-        const response = await fetch('data.json');
-        if (response.ok) {
-          birthdays = await response.json();
-          // Save to localStorage for future use
-          localStorage.setItem('birthdays', JSON.stringify(birthdays));
-        } else {
-          throw new Error('Failed to load JSON file');
-        }
-      } catch (error) {
-        console.error('Error loading data:', error);
-        // Fallback to default data
-        birthdays = [
-          { name: "Günay Hacıyeva", date: "1999-09-07" },
-          { name: "Aytan Nazarova", date: "1998-02-13" },
-          { name: "Günel Hüseynzade", date: "2001-01-12" },
-          { name: "Aysel Şərkerli", date: "1997-12-12" },
-          { name: "Narmin Asadova", date: "1993-09-15" },
-          { name: "Parvana", date: "1988-06-20" },
-          { name: "Aysel Qarayevа", date: "" },
-          { name: "Rasim Ağazade", date: "1985-11-12" },
-          { name: "Baba Ağayev", date: "1989-11-03" },
-          { name: "Rasim Həmidi", date: "1994-02-19" },
-          { name: "Kenan Dadaşov", date: "" },
-          { name: "Nicat", date: "" },
-          { name: "Elnur", date: "" },
-          { name: "Emin", date: "" },
-          { name: "Aytac", date: "" }
-        ];
-        localStorage.setItem('birthdays', JSON.stringify(birthdays));
-      }
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      renderTable(data);
     }
 
-    // Save data to localStorage and server
-    async function saveData() {
-      try {
-        // Save to localStorage
-        localStorage.setItem('birthdays', JSON.stringify(birthdays));
-        
-        // Try to save to server (optional)
-        try {
-          const response = await fetch('/save', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(birthdays)
-          });
-          
-          if (response.ok) {
-            console.log('Data saved to server successfully');
-          } else {
-            console.log('Server save failed, but localStorage saved');
-          }
-        } catch (serverError) {
-          console.log('Server unavailable, but localStorage saved');
-        }
-      } catch (error) {
-        console.error('Error saving data:', error);
-      }
-    }
-
-    // Format date for display
-    function formatDate(dateString) {
-      if (!dateString) return 'Tarix əlavə edilməyib';
-      
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      
-      return `${day}.${month}.${year}`;
-    }
-
-    // Get birthday status (past, future, today)
-    function getBirthdayStatus(dateString) {
-      if (!dateString) return 'empty';
-      
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      
-      // Create birthday date for current year
-      const birthdayDate = new Date(dateString);
-      birthdayDate.setFullYear(currentYear);
-      
-      // Reset time to start of day for accurate comparison
-      today.setHours(0, 0, 0, 0);
-      birthdayDate.setHours(0, 0, 0, 0);
-      
-      const timeDiff = birthdayDate.getTime() - today.getTime();
-      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      
-      if (daysDiff === 0) {
-        return 'today';
-      } else if (daysDiff < 0) {
-        return 'past';
-      } else {
-        return 'future';
-      }
-    }
-
-    // Render the table
-    function renderTable() {
-      const tbody = document.getElementById('birthdayBody');
-      tbody.innerHTML = '';
-
-      birthdays.forEach((birthday, index) => {
-        const row = tbody.insertRow();
-        const formattedDate = formatDate(birthday.date);
-        const status = getBirthdayStatus(birthday.date);
-        
-        // Add status emoji
-        let statusEmoji = '';
-        if (status === 'today') {
-          statusEmoji = ' 🎉';
-        } else if (status === 'future') {
-          statusEmoji = ' ⏰';
-        } else if (status === 'past') {
-          statusEmoji = ' ✅';
-        }
-        
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${birthday.name}${statusEmoji}</td>
-          <td>${formattedDate}</td>
-          <td>
-            <div class="action-buttons">
-              <button class="edit-btn" onclick="editBirthday(${index})">✏️</button>
-              <button class="delete-btn" onclick="deleteBirthday(${index})">🗑️</button>
-            </div>
-          </td>
+    function renderTable(data) {
+      const tbody = document.getElementById("table-body");
+      tbody.innerHTML = "";
+      data.forEach((b, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td contenteditable="true" onBlur="editName(${b.id}, this.innerText)">${b.name}</td>
+            <td contenteditable="true" onBlur="editBirthday(${b.id}, this.innerText)">${b.birthday}</td>
+            <td><button class="btn delete" onclick="deleteBirthday(${b.id})">Sil</button></td>
+          </tr>
         `;
-        
-        // Add appropriate CSS class based on status
-        if (!birthday.date) {
-          row.classList.add('empty-row');
-        } else {
-          row.classList.add(`${status}-birthday`);
-        }
       });
     }
 
-    // Add new birthday
     async function addBirthday() {
-      const name = document.getElementById('newName').value.trim();
-      const date = document.getElementById('newDate').value;
-      
-      if (!name) {
-        alert('Xahiş olunur ad və soyad daxil edin!');
-        return;
-      }
-      
-      const newBirthday = { name, date };
-      birthdays.push(newBirthday);
-      
-      // Save to localStorage and server
-      await saveData();
-      
-      renderTable();
-      
-      // Clear form
-      document.getElementById('newName').value = '';
-      document.getElementById('newDate').value = '';
-      
-      // Show success message
-      showNotification('Doğum günü uğurla əlavə edildi!', 'success');
+      const name = document.getElementById("name").value;
+      const birthday = document.getElementById("birthday").value;
+      if (!name || !birthday) return;
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, birthday })
+      });
+      document.getElementById("name").value = "";
+      document.getElementById("birthday").value = "";
+      loadData();
     }
 
-    // Edit birthday
-    function editBirthday(index) {
-      editingIndex = index;
-      const birthday = birthdays[index];
-      
-      document.getElementById('editName').value = birthday.name;
-      document.getElementById('editDate').value = birthday.date;
-      
-      document.getElementById('editModal').style.display = 'block';
+    async function editName(id, newName) {
+      await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName })
+      });
+      loadData();
     }
 
-    // Save edit
-    async function saveEdit() {
-      const name = document.getElementById('editName').value.trim();
-      const date = document.getElementById('editDate').value;
-      
-      if (!name) {
-        alert('Xahiş olunur ad və soyad daxil edin!');
-        return;
-      }
-      
-      birthdays[editingIndex] = { name, date };
-      
-      // Save to localStorage and server
-      await saveData();
-      
-      renderTable();
-      closeModal();
-      
-      showNotification('Doğum günü uğurla yeniləndi!', 'success');
+    async function editBirthday(id, newBirthday) {
+      await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ birthday: newBirthday })
+      });
+      loadData();
     }
 
-    // Delete birthday
-    async function deleteBirthday(index) {
-      const birthday = birthdays[index];
-      const confirmMessage = `"${birthday.name}" adlı şəxsin doğum gününü silmək istədiyinizə əminsiniz?`;
-      
-      if (confirm(confirmMessage)) {
-        birthdays.splice(index, 1);
-        
-        // Save to localStorage and server
-        await saveData();
-        
-        renderTable();
-        
-        showNotification(`"${birthday.name}" adlı şəxsin doğum günü uğurla silindi!`, 'success');
-      } else {
-        showNotification('Silinmə əməliyyatı ləğv edildi.', 'info');
-      }
+    async function deleteBirthday(id) {
+      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      loadData();
     }
 
-    // Close modal
-    function closeModal() {
-      document.getElementById('editModal').style.display = 'none';
-      editingIndex = -1;
-    }
-
-
-    // Show notification
-    function showNotification(message, type) {
-      // Create notification element
-      const notification = document.createElement('div');
-      
-      let backgroundColor;
-      switch(type) {
-        case 'success':
-          backgroundColor = '#4caf50';
-          break;
-        case 'info':
-          backgroundColor = '#2196f3';
-          break;
-        case 'error':
-          backgroundColor = '#f44336';
-          break;
-        default:
-          backgroundColor = '#4caf50';
-      }
-      
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${backgroundColor};
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        z-index: 1001;
-        font-weight: bold;
-        animation: slideIn 0.3s ease;
-        max-width: 300px;
-        word-wrap: break-word;
-      `;
-      notification.textContent = message;
-      
-      // Add animation styles
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes slideIn {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-          from { transform: translateX(0); opacity: 1; }
-          to { transform: translateX(100%); opacity: 0; }
-        }
-      `;
-      document.head.appendChild(style);
-      
-      document.body.appendChild(notification);
-      
-      // Remove notification after 3 seconds
-      setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => {
-          document.body.removeChild(notification);
-        }, 300);
-      }, 3000);
-    }
-
-    // Event listeners
-    document.getElementById('newName').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') addBirthday();
-    });
-    
-    document.getElementById('newDate').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') addBirthday();
-    });
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-      const modal = document.getElementById('editModal');
-      if (event.target === modal) {
-        closeModal();
-      }
-    }
-
-
-
-    // Initialize the application when page loads
-    document.addEventListener('DOMContentLoaded', init);
+    loadData();
   </script>
 </body>
 </html>

@@ -1,39 +1,43 @@
-const express = require('express');
-const fs = require('fs').promises;
-const path = require('path');
+const express = require("express");
+const fs = require("fs");
+const cors = require("cors");
 
 const app = express();
 const PORT = 3000;
 
-// Middleware
+app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static(".")); // index.html-i göstərmək üçün
 
-// Routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// Doğum günlərini oxumaq
+app.get("/birthdays", (req, res) => {
+  const data = JSON.parse(fs.readFileSync("birthdays.json", "utf8"));
+  res.json(data);
 });
 
-app.get('/data.json', async (req, res) => {
-  try {
-    const data = await fs.readFile('data.json', 'utf8');
-    res.json(JSON.parse(data));
-  } catch (error) {
-    res.status(404).json({ error: 'Data file not found' });
-  }
+// Yeni əlavə etmək
+app.post("/birthdays", (req, res) => {
+  const data = JSON.parse(fs.readFileSync("birthdays.json", "utf8"));
+  const newEntry = { id: Date.now(), ...req.body };
+  data.push(newEntry);
+  fs.writeFileSync("birthdays.json", JSON.stringify(data, null, 2));
+  res.json(newEntry);
 });
 
-app.post('/save', async (req, res) => {
-  try {
-    const data = req.body;
-    await fs.writeFile('data.json', JSON.stringify(data, null, 2));
-    res.json({ status: 'success', message: 'Data saved successfully' });
-  } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
-  }
+// Redaktə etmək
+app.put("/birthdays/:id", (req, res) => {
+  let data = JSON.parse(fs.readFileSync("birthdays.json", "utf8"));
+  data = data.map(b => b.id == req.params.id ? { ...b, ...req.body } : b);
+  fs.writeFileSync("birthdays.json", JSON.stringify(data, null, 2));
+  res.json({ success: true });
 });
 
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// Silmək
+app.delete("/birthdays/:id", (req, res) => {
+  let data = JSON.parse(fs.readFileSync("birthdays.json", "utf8"));
+  data = data.filter(b => b.id != req.params.id);
+  fs.writeFileSync("birthdays.json", JSON.stringify(data, null, 2));
+  res.json({ success: true });
 });
+
+app.listen(PORT, () => console.log(`Server http://localhost:${PORT} ünvanında işlədi`));

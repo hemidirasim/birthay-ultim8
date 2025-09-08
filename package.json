@@ -1,27 +1,17 @@
 {
   "name": "birthay-ultim8",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Doğum günləri idarəetmə tətbiqi",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hemidirasim/birthay-ultim8.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hemidirasim/birthay-ultim8/issues"
-  },
-  "homepage": "https://github.com/hemidirasim/birthay-ultim8#readme",
   "dependencies": {
-    "express": "^5.1.0",
-    "vite": "^7.1.5"
-  }
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "keywords": ["birthday", "management", "nodejs", "express"],
+  "author": "",
+  "license": "ISC"
 }
