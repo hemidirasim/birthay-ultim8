@@ -47,7 +47,7 @@
   {
     "id": 10,
     "name": "Rasim Həmidi",
-    "birthday": "19.02.1994"
+    "birthday": "19.02.1993"
   },
   {
     "id": 11,
@@ -76,16 +76,11 @@
   },
   {
     "id": 16,
-    "name": "Test - Bu Gün",
-    "birthday": "25.12.2024"
-  },
-  {
-    "id": 17,
     "name": "Test - Keçmiş",
     "birthday": "01.01.2024"
   },
   {
-    "id": 18,
+    "id": 17,
     "name": "Test - Gələcək",
     "birthday": "31.12.2024"
   }

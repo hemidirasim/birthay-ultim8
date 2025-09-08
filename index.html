@@ -197,26 +197,6 @@
       background: linear-gradient(135deg, #c3e6cb, #b8dacc);
     }
     
-    /* Today's birthday styling */
-    .today-birthday {
-      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-      color: white;
-      font-weight: bold;
-      border-left: 4px solid #ff0000;
-      animation: pulse 2s infinite;
-      box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
-    }
-    
-    .today-birthday:hover {
-      background: linear-gradient(135deg, #ee5a24, #d63031);
-    }
-    
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-      100% { transform: scale(1); }
-    }
-    
     .emoji {
       font-size: 18px;
       margin-left: 5px;
@@ -557,7 +537,7 @@
       </tr>
       <tr style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-size: 12px; color: #666;">
         <th colspan="4" style="text-align: center; padding: 8px;">
-          🎉 Bu gün (Qırmızı) | ⏰ Gələcək (Yaşıl) | ✅ Keçmiş (Çəhrayı) | 📝 Tarix yoxdur (Ağ)
+          ⏰ Gələcək (Yaşıl) | ✅ Keçmiş (Çəhrayı)
         </th>
       </tr>
     </thead>
@@ -948,14 +928,14 @@
     }
 
     function getBirthdayStatus(dateString) {
-      if (!dateString || dateString === "Tarix əlavə edilməyib") return 'empty';
+      if (!dateString || dateString === "Tarix əlavə edilməyib") return 'normal';
       
       const today = new Date();
       const currentYear = today.getFullYear();
       
       // Parse DD.MM.YYYY format
       const parts = dateString.split('.');
-      if (parts.length !== 3) return 'empty';
+      if (parts.length !== 3) return 'normal';
       
       const day = parseInt(parts[0]);
       const month = parseInt(parts[1]) - 1; // JavaScript months are 0-based
@@ -971,9 +951,7 @@
       const timeDiff = birthdayDate.getTime() - today.getTime();
       const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
       
-      if (daysDiff === 0) {
-        return 'today';
-      } else if (daysDiff < 0) {
+      if (daysDiff < 0) {
         return 'past';
       } else {
         return 'future';
@@ -982,8 +960,6 @@
 
     function getStatusEmoji(status) {
       switch(status) {
-        case 'today':
-          return ' 🎉';
         case 'future':
           return ' ⏰';
         case 'past':
