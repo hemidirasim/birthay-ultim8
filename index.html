@@ -397,12 +397,28 @@
       }
     }
 
-    // Save data to localStorage
-    function saveData() {
+    // Save data to localStorage and server
+    async function saveData() {
       try {
+        // Save to localStorage
         localStorage.setItem('birthdays', JSON.stringify(birthdays));
+        
+        // Save to server (data.json)
+        const response = await fetch('/save', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(birthdays)
+        });
+        
+        if (response.ok) {
+          console.log('Data saved to server successfully');
+        } else {
+          console.error('Failed to save data to server');
+        }
       } catch (error) {
-        console.error('Error saving to localStorage:', error);
+        console.error('Error saving data:', error);
       }
     }
 
@@ -487,7 +503,7 @@
     }
 
     // Add new birthday
-    function addBirthday() {
+    async function addBirthday() {
       const name = document.getElementById('newName').value.trim();
       const date = document.getElementById('newDate').value;
       
@@ -499,8 +515,8 @@
       const newBirthday = { name, date };
       birthdays.push(newBirthday);
       
-      // Save to localStorage
-      saveData();
+      // Save to localStorage and server
+      await saveData();
       
       renderTable();
       
@@ -524,7 +540,7 @@
     }
 
     // Save edit
-    function saveEdit() {
+    async function saveEdit() {
       const name = document.getElementById('editName').value.trim();
       const date = document.getElementById('editDate').value;
       
@@ -535,8 +551,8 @@
       
       birthdays[editingIndex] = { name, date };
       
-      // Save to localStorage
-      saveData();
+      // Save to localStorage and server
+      await saveData();
       
       renderTable();
       closeModal();
@@ -545,15 +561,15 @@
     }
 
     // Delete birthday
-    function deleteBirthday(index) {
+    async function deleteBirthday(index) {
       const birthday = birthdays[index];
       const confirmMessage = `"${birthday.name}" adlı şəxsin doğum gününü silmək istədiyinizə əminsiniz?`;
       
       if (confirm(confirmMessage)) {
         birthdays.splice(index, 1);
         
-        // Save to localStorage
-        saveData();
+        // Save to localStorage and server
+        await saveData();
         
         renderTable();
         
