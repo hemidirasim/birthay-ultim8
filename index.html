@@ -426,12 +426,17 @@
 
     // Delete birthday
     function deleteBirthday(index) {
-      if (confirm('Bu doğum gününü silmək istədiyinizə əminsiniz?')) {
+      const birthday = birthdays[index];
+      const confirmMessage = `"${birthday.name}" adlı şəxsin doğum gününü silmək istədiyinizə əminsiniz?`;
+      
+      if (confirm(confirmMessage)) {
         birthdays.splice(index, 1);
         saveData();
         renderTable();
         
-        showNotification('Doğum günü uğurla silindi!', 'success');
+        showNotification(`"${birthday.name}" adlı şəxsin doğum günü uğurla silindi!`, 'success');
+      } else {
+        showNotification('Silinmə əməliyyatı ləğv edildi.', 'info');
       }
     }
 
@@ -446,11 +451,27 @@
     function showNotification(message, type) {
       // Create notification element
       const notification = document.createElement('div');
+      
+      let backgroundColor;
+      switch(type) {
+        case 'success':
+          backgroundColor = '#4caf50';
+          break;
+        case 'info':
+          backgroundColor = '#2196f3';
+          break;
+        case 'error':
+          backgroundColor = '#f44336';
+          break;
+        default:
+          backgroundColor = '#4caf50';
+      }
+      
       notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#4caf50' : '#f44336'};
+        background: ${backgroundColor};
         color: white;
         padding: 15px 20px;
         border-radius: 8px;
@@ -458,6 +479,8 @@
         z-index: 1001;
         font-weight: bold;
         animation: slideIn 0.3s ease;
+        max-width: 300px;
+        word-wrap: break-word;
       `;
       notification.textContent = message;
       
