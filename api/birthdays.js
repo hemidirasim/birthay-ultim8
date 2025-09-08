@@ -3,9 +3,22 @@ const path = require('path');
 
 // In-memory storage for Vercel (since file system is read-only)
 let birthdays = [
-  { id: 1, name: "Midiya", birthday: "15.03.1995" },
-  { id: 2, name: "Azer", birthday: "20.07.1990" },
-  { id: 3, name: "Test", birthday: "01.01.2000" }
+  {"id":1,"name":"Günay Hacıyeva","birthday":"07.09.1999"},
+  {"id":2,"name":"Aytan Nazarova","birthday":"13.02.1998"},
+  {"id":3,"name":"Günel Hüseynzade","birthday":"12.01.2001"},
+  {"id":4,"name":"Aysel Sərkərli","birthday":"12.12.1997"},
+  {"id":5,"name":"Narmin Asadova","birthday":"15.09.1993"},
+  {"id":6,"name":"Parvana","birthday":"20.06.1988"},
+  {"id":7,"name":"Aysel Qarayeva","birthday":""},
+  {"id":8,"name":"Rasim Ağazade","birthday":"12.11.1985"},
+  {"id":9,"name":"Baba Ağayev","birthday":"03.11.1989"},
+  {"id":10,"name":"Rasim Həmidi","birthday":"19.02.1994"},
+  {"id":11,"name":"Kənan Dadaşov","birthday":"01.06.1995"},
+  {"id":12,"name":"Nicat","birthday":""},
+  {"id":13,"name":"Elnur","birthday":"19.10.1994"},
+  {"id":14,"name":"Emin","birthday":""},
+  {"id":15,"name":"Aytac","birthday":"08.03.2000"},
+  {"id":1757329798171,"name":"Nərgiz","birthday":"05.05.1995"}
 ];
 
 export default function handler(req, res) {
