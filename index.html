@@ -497,7 +497,7 @@
       const newBirthday = { name, date };
       birthdays.push(newBirthday);
       
-      // Save to JSON file
+      // Save to JSON file and download automatically
       saveData();
       
       renderTable();
@@ -507,7 +507,7 @@
       document.getElementById('newDate').value = '';
       
       // Show success message
-      showNotification('Doğum günü uğurla əlavə edildi!', 'success');
+      showNotification('Doğum günü əlavə edildi və JSON faylı yükləndi!', 'success');
     }
 
     // Edit birthday
@@ -536,7 +536,7 @@
       renderTable();
       closeModal();
       
-      showNotification('Doğum günü uğurla yeniləndi!', 'success');
+      showNotification('Doğum günü yeniləndi və JSON faylı yükləndi!', 'success');
     }
 
     // Delete birthday
@@ -549,7 +549,7 @@
         saveData();
         renderTable();
         
-        showNotification(`"${birthday.name}" adlı şəxsin doğum günü uğurla silindi!`, 'success');
+        showNotification(`"${birthday.name}" adlı şəxsin doğum günü silindi və JSON faylı yükləndi!`, 'success');
       } else {
         showNotification('Silinmə əməliyyatı ləğv edildi.', 'info');
       }
