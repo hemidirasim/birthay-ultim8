@@ -50,6 +50,20 @@
       box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
     }
     
+    .add-form input[type="date"] {
+      background: white;
+      color: #333;
+      cursor: pointer;
+    }
+    
+    .add-form input[type="date"]::-webkit-calendar-picker-indicator {
+      background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYgMkg0QzIuOSAyIDIgMi45IDIgNFYxNkMyIDE3LjEgMi45IDE4IDQgMThIMTZDMTcuMSAxOCAxOCAxNy4xIDE4IDE2VjRDMTggMi45IDE3LjEgMiAxNiAySDE0VjBIMTJWMEgxMFYySDhWMEg2VjJaIiBmaWxsPSIjNjY2Ii8+CjxwYXRoIGQ9Ik0yIDZIMThWMTZIMlY2WiIgZmlsbD0iI2Y1ZjVmNSIvPgo8L3N2Zz4K') no-repeat center;
+      background-size: 20px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    
     .add-form input:focus {
       outline: none;
       box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.3);
@@ -137,23 +151,184 @@
       margin-left: 5px;
     }
     
+    /* Edit Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 500px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: #000;
+    }
+    
+    .modal h3 {
+      margin-top: 0;
+      color: #f05454;
+      text-align: center;
+    }
+    
+    .modal .form-row {
+      margin-bottom: 20px;
+    }
+    
+    .modal .form-row input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    
+    .modal .form-row input:focus {
+      border-color: #f05454;
+      outline: none;
+    }
+    
+    .save-btn {
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+    
+    .save-btn:hover {
+      background: linear-gradient(135deg, #45a049, #3d8b40);
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      z-index: 1001;
+      animation: slideIn 0.3s ease;
+      max-width: 300px;
+      word-wrap: break-word;
+    }
+    
+    .notification.success {
+      background: #4caf50;
+    }
+    
+    .notification.error {
+      background: #f44336;
+    }
+    
+    .notification.info {
+      background: #2196f3;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+    
     @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
       .form-row {
         flex-direction: column;
+        gap: 10px;
       }
       
       .add-form input {
         min-width: auto;
         width: 100%;
+        margin-bottom: 10px;
+      }
+      
+      .add-form button {
+        width: 100%;
       }
       
       table {
-        width: 95%;
-        font-size: 14px;
+        width: 100%;
+        font-size: 12px;
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
       }
       
       th, td {
-        padding: 10px 5px;
+        padding: 8px 4px;
+        min-width: 80px;
+      }
+      
+      .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px;
+      }
+      
+      .notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1.5em;
+      }
+      
+      .add-form h3 {
+        font-size: 1.2em;
+      }
+      
+      table {
+        font-size: 11px;
+      }
+      
+      th, td {
+        padding: 6px 2px;
+      }
+      
+      .btn {
+        padding: 6px 8px;
+        font-size: 12px;
       }
     }
   </style>
@@ -166,7 +341,7 @@
     <h3>🎂 Yeni Doğum Günü Əlavə Et</h3>
     <div class="form-row">
       <input type="text" id="name" placeholder="Ad və Soyad">
-      <input type="text" id="birthday" placeholder="dd.mm.yyyy">
+      <input type="date" id="birthday">
       <button onclick="addBirthday()">➕ Əlavə Et</button>
     </div>
   </div>
@@ -183,14 +358,31 @@
     <tbody id="table-body"></tbody>
   </table>
 
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>✏️ Doğum Gününü Redaktə Et</h3>
+      <div class="form-row">
+        <input type="text" id="editName" placeholder="Ad və Soyad">
+      </div>
+      <div class="form-row">
+        <input type="date" id="editDate">
+      </div>
+      <button class="save-btn" onclick="saveEdit()">💾 Saxla</button>
+    </div>
+  </div>
+
   <script>
     const API_URL = "http://localhost:3000/birthdays";
+    let editingIndex = -1;
 
     async function loadData() {
       try {
         const res = await fetch(API_URL);
         if (res.ok) {
           const data = await res.json();
+          localStorage.setItem('currentData', JSON.stringify(data));
           renderTable(data);
         } else {
           console.error('Load failed:', res.status);
@@ -210,9 +402,12 @@
         tbody.innerHTML += `
           <tr>
             <td>${index + 1}</td>
-            <td contenteditable="true" onBlur="editName(${b.id}, this.innerText)">${b.name}</td>
-            <td contenteditable="true" onBlur="editBirthday(${b.id}, this.innerText)" class="${birthdayClass}">${birthdayDisplay}</td>
-            <td><button class="btn delete" onclick="deleteBirthday(${b.id})">🗑️</button></td>
+            <td>${b.name}</td>
+            <td class="${birthdayClass}">${birthdayDisplay}</td>
+            <td>
+              <button class="btn edit" onclick="editBirthday(${index})" style="background: orange; color: white; margin-right: 5px;">✏️</button>
+              <button class="btn delete" onclick="confirmDelete(${b.id}, '${b.name}')">🗑️</button>
+            </td>
           </tr>
         `;
       });
@@ -221,57 +416,88 @@
     async function addBirthday() {
       const name = document.getElementById("name").value;
       const birthday = document.getElementById("birthday").value;
-      if (!name || !birthday) return;
+      if (!name || !birthday) {
+        showNotification('Xahiş olunur ad və tarix daxil edin!', 'error');
+        return;
+      }
       
       try {
+        const formattedDate = formatDateForDisplay(birthday);
         const response = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, birthday })
+          body: JSON.stringify({ name, birthday: formattedDate })
         });
         if (response.ok) {
           document.getElementById("name").value = "";
           document.getElementById("birthday").value = "";
           loadData();
+          showNotification('Doğum günü uğurla əlavə edildi!', 'success');
         } else {
           console.error('Add failed:', response.status);
+          showNotification('Əlavə etmə uğursuz oldu!', 'error');
         }
       } catch (error) {
         console.error('Add error:', error);
+        showNotification('Xəta baş verdi!', 'error');
       }
     }
 
-    async function editName(id, newName) {
+    function editBirthday(index) {
+      editingIndex = index;
+      loadData().then(() => {
+        const data = JSON.parse(localStorage.getItem('currentData') || '[]');
+        const birthday = data[index];
+        
+        document.getElementById('editName').value = birthday.name;
+        document.getElementById('editDate').value = birthday.birthday ? formatDateForInput(birthday.birthday) : '';
+        
+        document.getElementById('editModal').style.display = 'block';
+      });
+    }
+
+    async function saveEdit() {
+      const name = document.getElementById('editName').value.trim();
+      const date = document.getElementById('editDate').value;
+      
+      if (!name) {
+        showNotification('Xahiş olunur ad daxil edin!', 'error');
+        return;
+      }
+      
       try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const data = JSON.parse(localStorage.getItem('currentData') || '[]');
+        const birthday = data[editingIndex];
+        const formattedDate = date ? formatDateForDisplay(date) : '';
+        
+        const response = await fetch(`${API_URL}/${birthday.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: newName })
+          body: JSON.stringify({ name, birthday: formattedDate })
         });
+        
         if (response.ok) {
+          closeModal();
           loadData();
+          showNotification('Doğum günü uğurla yeniləndi!', 'success');
         } else {
           console.error('Edit failed:', response.status);
+          showNotification('Yeniləmə uğursuz oldu!', 'error');
         }
       } catch (error) {
         console.error('Edit error:', error);
+        showNotification('Xəta baş verdi!', 'error');
       }
     }
 
-    async function editBirthday(id, newBirthday) {
-      try {
-        const response = await fetch(`${API_URL}/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ birthday: newBirthday })
-        });
-        if (response.ok) {
-          loadData();
-        } else {
-          console.error('Edit failed:', response.status);
-        }
-      } catch (error) {
-        console.error('Edit error:', error);
+    function closeModal() {
+      document.getElementById('editModal').style.display = 'none';
+      editingIndex = -1;
+    }
+
+    function confirmDelete(id, name) {
+      if (confirm(`"${name}" adlı şəxsin doğum gününü silmək istədiyinizə əminsiniz?`)) {
+        deleteBirthday(id);
       }
     }
 
@@ -280,11 +506,55 @@
         const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
         if (response.ok) {
           loadData();
+          showNotification('Doğum günü uğurla silindi!', 'success');
         } else {
           console.error('Delete failed:', response.status);
+          showNotification('Silinmə uğursuz oldu!', 'error');
         }
       } catch (error) {
         console.error('Delete error:', error);
+        showNotification('Xəta baş verdi!', 'error');
+      }
+    }
+
+    function formatDateForDisplay(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    }
+
+    function formatDateForInput(dateString) {
+      if (!dateString) return '';
+      const parts = dateString.split('.');
+      if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return dateString;
+    }
+
+    function showNotification(message, type) {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('editModal');
+      if (event.target === modal) {
+        closeModal();
       }
     }
 
