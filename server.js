@@ -26,18 +26,28 @@ app.post("/birthdays", (req, res) => {
 
 // Redaktə etmək
 app.put("/birthdays/:id", (req, res) => {
-  let data = JSON.parse(fs.readFileSync("birthdays.json", "utf8"));
-  data = data.map(b => b.id == req.params.id ? { ...b, ...req.body } : b);
-  fs.writeFileSync("birthdays.json", JSON.stringify(data, null, 2));
-  res.json({ success: true });
+  try {
+    let data = JSON.parse(fs.readFileSync("birthdays.json", "utf8"));
+    data = data.map(b => b.id == req.params.id ? { ...b, ...req.body } : b);
+    fs.writeFileSync("birthdays.json", JSON.stringify(data, null, 2));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Edit error:', error);
+    res.status(500).json({ error: 'Edit failed' });
+  }
 });
 
 // Silmək
 app.delete("/birthdays/:id", (req, res) => {
-  let data = JSON.parse(fs.readFileSync("birthdays.json", "utf8"));
-  data = data.filter(b => b.id != req.params.id);
-  fs.writeFileSync("birthdays.json", JSON.stringify(data, null, 2));
-  res.json({ success: true });
+  try {
+    let data = JSON.parse(fs.readFileSync("birthdays.json", "utf8"));
+    data = data.filter(b => b.id != req.params.id);
+    fs.writeFileSync("birthdays.json", JSON.stringify(data, null, 2));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({ error: 'Delete failed' });
+  }
 });
 
 app.listen(PORT, () => console.log(`Server http://localhost:${PORT} ünvanında işlədi`));

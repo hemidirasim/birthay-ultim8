@@ -43,9 +43,17 @@
     const API_URL = "http://localhost:3000/birthdays";
 
     async function loadData() {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      renderTable(data);
+      try {
+        const res = await fetch(API_URL);
+        if (res.ok) {
+          const data = await res.json();
+          renderTable(data);
+        } else {
+          console.error('Load failed:', res.status);
+        }
+      } catch (error) {
+        console.error('Load error:', error);
+      }
     }
 
     function renderTable(data) {
@@ -67,37 +75,70 @@
       const name = document.getElementById("name").value;
       const birthday = document.getElementById("birthday").value;
       if (!name || !birthday) return;
-      await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, birthday })
-      });
-      document.getElementById("name").value = "";
-      document.getElementById("birthday").value = "";
-      loadData();
+      
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, birthday })
+        });
+        if (response.ok) {
+          document.getElementById("name").value = "";
+          document.getElementById("birthday").value = "";
+          loadData();
+        } else {
+          console.error('Add failed:', response.status);
+        }
+      } catch (error) {
+        console.error('Add error:', error);
+      }
     }
 
     async function editName(id, newName) {
-      await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newName })
-      });
-      loadData();
+      try {
+        const response = await fetch(`${API_URL}/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: newName })
+        });
+        if (response.ok) {
+          loadData();
+        } else {
+          console.error('Edit failed:', response.status);
+        }
+      } catch (error) {
+        console.error('Edit error:', error);
+      }
     }
 
     async function editBirthday(id, newBirthday) {
-      await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ birthday: newBirthday })
-      });
-      loadData();
+      try {
+        const response = await fetch(`${API_URL}/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ birthday: newBirthday })
+        });
+        if (response.ok) {
+          loadData();
+        } else {
+          console.error('Edit failed:', response.status);
+        }
+      } catch (error) {
+        console.error('Edit error:', error);
+      }
     }
 
     async function deleteBirthday(id) {
-      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      loadData();
+      try {
+        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        if (response.ok) {
+          loadData();
+        } else {
+          console.error('Delete failed:', response.status);
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+      }
     }
 
     loadData();
