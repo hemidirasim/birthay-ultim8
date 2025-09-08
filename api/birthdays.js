@@ -32,6 +32,11 @@ export default function handler(req, res) {
     return;
   }
 
+  // Debug logging
+  console.log('Request method:', req.method);
+  console.log('Request URL:', req.url);
+  console.log('Request body:', req.body);
+
   try {
     if (req.method === 'GET') {
       // Return all birthdays
@@ -59,12 +64,23 @@ export default function handler(req, res) {
       const id = urlParts[urlParts.length - 1];
       const { name, birthday } = req.body;
       
+      console.log('PUT - ID:', id);
+      console.log('PUT - Name:', name);
+      console.log('PUT - Birthday:', birthday);
+      
+      if (!id) {
+        return res.status(400).json({ error: 'ID is required' });
+      }
+      
       const index = birthdays.findIndex(b => b.id == id);
+      console.log('PUT - Found index:', index);
+      
       if (index === -1) {
         return res.status(404).json({ error: 'Birthday not found' });
       }
       
       birthdays[index] = { ...birthdays[index], name, birthday };
+      console.log('PUT - Updated birthday:', birthdays[index]);
       res.status(200).json(birthdays[index]);
     } 
     else if (req.method === 'DELETE') {
