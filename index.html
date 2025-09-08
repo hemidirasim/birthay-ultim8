@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doğum Günləri - 2025</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      text-align: center;
+      color: #d32f2f;
+      margin-bottom: 30px;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    /* Add New Entry Form */
+    .add-form {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 25px rgba(238, 90, 36, 0.3);
+    }
+    .add-form h3 {
+      color: white;
+      margin-top: 0;
+      text-align: center;
+      font-size: 1.4em;
+    }
+    .form-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .form-row input {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+      min-width: 200px;
+    }
+    .form-row input:focus {
+      outline: none;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.3);
+    }
+    .add-btn {
+      background: linear-gradient(135deg, #2ed573, #1e90ff);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+    }
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
+    }
+    
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    thead {
+      background: linear-gradient(135deg, #d32f2f, #f44336);
+      color: #fff;
+    }
+    thead th {
+      padding: 18px 12px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    tbody td {
+      padding: 15px 10px;
+      text-align: center;
+      font-size: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      position: relative;
+    }
+    tbody tr:nth-child(even) {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+    tbody tr:hover {
+      background: linear-gradient(135deg, #ffe0e0, #ffcccb);
+      transform: scale(1.02);
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .emoji {
+      font-size: 18px;
+      margin-left: 5px;
+    }
+    
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+    .edit-btn, .delete-btn {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+    .edit-btn {
+      background: linear-gradient(135deg, #ffa726, #ff9800);
+      color: white;
+    }
+    .edit-btn:hover {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      transform: scale(1.1);
+    }
+    .delete-btn {
+      background: linear-gradient(135deg, #ff4757, #ff3838);
+      color: white;
+    }
+    .delete-btn:hover {
+      background: linear-gradient(135deg, #ff3838, #ff2f2f);
+      transform: scale(1.1);
+    }
+    
+    /* Empty row styling */
+    .empty-row td {
+      color: #999;
+      font-style: italic;
+      background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    }
+    
+    /* Edit form modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 500px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover {
+      color: #000;
+    }
+    .modal h3 {
+      margin-top: 0;
+      color: #d32f2f;
+      text-align: center;
+    }
+    .modal .form-row {
+      margin-bottom: 20px;
+    }
+    .modal .form-row input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .modal .form-row input:focus {
+      border-color: #d32f2f;
+      outline: none;
+    }
+    .save-btn {
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+    .save-btn:hover {
+      background: linear-gradient(135deg, #45a049, #3d8b40);
+    }
+    
+    /* Export/Import buttons */
+    .export-import {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    .export-btn, .import-btn {
+      background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    .export-btn:hover, .import-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+    }
+    .file-input {
+      display: none;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+      }
+      .form-row input {
+        min-width: auto;
+      }
+      table {
+        font-size: 14px;
+      }
+      thead th, tbody td {
+        padding: 10px 5px;
+      }
+      h1 {
+        font-size: 2em;
+      }
+      .export-import {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Doğum Günləri - 2025 🎉</h1>
+    
+    <!-- Export/Import Section -->
+    <div class="export-import">
+      <button class="export-btn" onclick="exportData()">📤 JSON Faylını Yüklə</button>
+      <button class="import-btn" onclick="document.getElementById('fileInput').click()">📥 JSON Faylını Yüklə</button>
+      <input type="file" id="fileInput" class="file-input" accept=".json" onchange="importData(event)">
+    </div>
+    
+    <!-- Add New Entry Form -->
+    <div class="add-form">
+      <h3>🎂 Yeni Doğum Günü Əlavə Et</h3>
+      <div class="form-row">
+        <input type="text" id="newName" placeholder="Ad və Soyad" maxlength="50">
+        <input type="date" id="newDate">
+        <button class="add-btn" onclick="addBirthday()">➕ Əlavə Et</button>
+      </div>
+    </div>
+    
+    <table id="birthdayTable">
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>Ad və Soyad</th>
+          <th>Doğum Tarixi</th>
+          <th>Əməliyyat</th>
+        </tr>
+      </thead>
+      <tbody id="birthdayBody">
+        <!-- Data will be loaded here -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>✏️ Doğum Gününü Redaktə Et</h3>
+      <div class="form-row">
+        <input type="text" id="editName" placeholder="Ad və Soyad" maxlength="50">
+      </div>
+      <div class="form-row">
+        <input type="date" id="editDate">
+      </div>
+      <button class="save-btn" onclick="saveEdit()">💾 Saxla</button>
+    </div>
+  </div>
+
+  <script>
+    let birthdays = [];
+    let editingIndex = -1;
+
+    // Initialize the application
+    function init() {
+      loadData();
+      renderTable();
+    }
+
+    // Load data from localStorage or use default data
+    function loadData() {
+      const savedData = localStorage.getItem('birthdays');
+      if (savedData) {
+        birthdays = JSON.parse(savedData);
+      } else {
+        // Default data
+        birthdays = [
+          { name: "Günay Hacıyeva", date: "1999-09-07" },
+          { name: "Aytan Nazarova", date: "1998-02-13" },
+          { name: "Günel Hüseynzade", date: "2001-01-12" },
+          { name: "Aysel Şərkerli", date: "1997-12-12" },
+          { name: "Narmin Asadova", date: "1993-09-15" },
+          { name: "Parvana", date: "1988-06-20" },
+          { name: "Aysel Qarayevа", date: "" },
+          { name: "Rasim Ağazade", date: "1985-11-12" },
+          { name: "Baba Ağayev", date: "1989-11-03" },
+          { name: "Rasim Həmidi", date: "1994-02-19" },
+          { name: "Kenan Dadaşov", date: "" },
+          { name: "Nicat", date: "" },
+          { name: "Elnur", date: "" },
+          { name: "Emin", date: "" },
+          { name: "Aytac", date: "" }
+        ];
+        saveData();
+      }
+    }
+
+    // Save data to localStorage
+    function saveData() {
+      localStorage.setItem('birthdays', JSON.stringify(birthdays));
+    }
+
+    // Format date for display
+    function formatDate(dateString) {
+      if (!dateString) return 'Tarix əlavə edilməyib';
+      
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      
+      return `${day}.${month}.${year}`;
+    }
+
+    // Render the table
+    function renderTable() {
+      const tbody = document.getElementById('birthdayBody');
+      tbody.innerHTML = '';
+
+      birthdays.forEach((birthday, index) => {
+        const row = tbody.insertRow();
+        const formattedDate = formatDate(birthday.date);
+        
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${birthday.name}</td>
+          <td>${formattedDate}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="edit-btn" onclick="editBirthday(${index})">✏️</button>
+              <button class="delete-btn" onclick="deleteBirthday(${index})">🗑️</button>
+            </div>
+          </td>
+        `;
+        
+        if (!birthday.date) {
+          row.classList.add('empty-row');
+        }
+      });
+    }
+
+    // Add new birthday
+    function addBirthday() {
+      const name = document.getElementById('newName').value.trim();
+      const date = document.getElementById('newDate').value;
+      
+      if (!name) {
+        alert('Xahiş olunur ad və soyad daxil edin!');
+        return;
+      }
+      
+      birthdays.push({ name, date });
+      saveData();
+      renderTable();
+      
+      // Clear form
+      document.getElementById('newName').value = '';
+      document.getElementById('newDate').value = '';
+      
+      // Show success message
+      showNotification('Doğum günü uğurla əlavə edildi!', 'success');
+    }
+
+    // Edit birthday
+    function editBirthday(index) {
+      editingIndex = index;
+      const birthday = birthdays[index];
+      
+      document.getElementById('editName').value = birthday.name;
+      document.getElementById('editDate').value = birthday.date;
+      
+      document.getElementById('editModal').style.display = 'block';
+    }
+
+    // Save edit
+    function saveEdit() {
+      const name = document.getElementById('editName').value.trim();
+      const date = document.getElementById('editDate').value;
+      
+      if (!name) {
+        alert('Xahiş olunur ad və soyad daxil edin!');
+        return;
+      }
+      
+      birthdays[editingIndex] = { name, date };
+      saveData();
+      renderTable();
+      closeModal();
+      
+      showNotification('Doğum günü uğurla yeniləndi!', 'success');
+    }
+
+    // Delete birthday
+    function deleteBirthday(index) {
+      if (confirm('Bu doğum gününü silmək istədiyinizə əminsiniz?')) {
+        birthdays.splice(index, 1);
+        saveData();
+        renderTable();
+        
+        showNotification('Doğum günü uğurla silindi!', 'success');
+      }
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById('editModal').style.display = 'none';
+      editingIndex = -1;
+    }
+
+    // Export data to JSON file
+    function exportData() {
+      const dataStr = JSON.stringify(birthdays, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(dataBlob);
+      link.download = 'dogum_gunleri.json';
+      link.click();
+      
+      showNotification('JSON faylı uğurla yükləndi!', 'success');
+    }
+
+    // Import data from JSON file
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          if (Array.isArray(importedData)) {
+            birthdays = importedData;
+            saveData();
+            renderTable();
+            showNotification('JSON faylı uğurla yükləndi!', 'success');
+          } else {
+            throw new Error('Invalid data format');
+          }
+        } catch (error) {
+          alert('JSON faylı düzgün formatda deyil!');
+        }
+      };
+      reader.readAsText(file);
+      
+      // Reset file input
+      event.target.value = '';
+    }
+
+    // Show notification
+    function showNotification(message, type) {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#4caf50' : '#f44336'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 1001;
+        font-weight: bold;
+        animation: slideIn 0.3s ease;
+      `;
+      notification.textContent = message;
+      
+      // Add animation styles
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+          from { transform: translateX(0); opacity: 1; }
+          to { transform: translateX(100%); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(notification);
+      
+      // Remove notification after 3 seconds
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+
+    // Event listeners
+    document.getElementById('newName').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') addBirthday();
+    });
+    
+    document.getElementById('newDate').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') addBirthday();
+    });
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('editModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    // Initialize the application when page loads
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
