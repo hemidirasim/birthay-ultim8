@@ -69,6 +69,7 @@
       border-color: #d0d0d0;
     }
     
+    
     .add-form input { 
       padding: 12px 15px;
       border: none;
@@ -337,6 +338,7 @@
         font-size: 16px;
         border-radius: 10px;
       }
+      
       
       .add-form button {
         width: 100%;
@@ -769,9 +771,10 @@
           const data = JSON.parse(localData);
           localStorage.setItem('currentData', JSON.stringify(data));
           renderTable(data);
+          return; // Don't overwrite with server data if localStorage has data
         }
         
-        // Then try to fetch from server
+        // Only fetch from server if localStorage is empty
         const res = await fetch(API_URL);
         if (res.ok) {
           const data = await res.json();
