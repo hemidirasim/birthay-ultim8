@@ -404,19 +404,23 @@
         // Save to localStorage
         localStorage.setItem('birthdays', JSON.stringify(birthdays));
         
-        // Save to server (data.json)
-        const response = await fetch('/api/save', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(birthdays)
-        });
-        
-        if (response.ok) {
-          console.log('Data saved to server successfully');
-        } else {
-          console.error('Failed to save data to server');
+        // Try to save to server (optional)
+        try {
+          const response = await fetch('/api/save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(birthdays)
+          });
+          
+          if (response.ok) {
+            console.log('Data saved to server successfully');
+          } else {
+            console.log('Server save failed, but localStorage saved');
+          }
+        } catch (serverError) {
+          console.log('Server unavailable, but localStorage saved');
         }
       } catch (error) {
         console.error('Error saving data:', error);
