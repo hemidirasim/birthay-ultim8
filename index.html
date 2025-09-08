@@ -146,6 +146,46 @@
       font-style: italic;
     }
     
+    /* Past birthday styling */
+    .past-birthday {
+      background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+      color: #666;
+      opacity: 0.8;
+    }
+    
+    .past-birthday:hover {
+      background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    }
+    
+    /* Future birthday styling */
+    .future-birthday {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      color: #856404;
+      font-weight: bold;
+    }
+    
+    .future-birthday:hover {
+      background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+    }
+    
+    /* Today's birthday styling */
+    .today-birthday {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      font-weight: bold;
+      animation: pulse 2s infinite;
+    }
+    
+    .today-birthday:hover {
+      background: linear-gradient(135deg, #ee5a24, #d63031);
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    
     .emoji {
       font-size: 18px;
       margin-left: 5px;
@@ -354,6 +394,11 @@
         <th>DOĞUM TARİXİ</th>
         <th>ƏMƏLİYYAT</th>
       </tr>
+      <tr style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-size: 12px; color: #666;">
+        <th colspan="4" style="text-align: center; padding: 8px;">
+          🎉 Bu gün | ⏰ Gələcək | ✅ Keçmiş | 📝 Tarix yoxdur
+        </th>
+      </tr>
     </thead>
     <tbody id="table-body"></tbody>
   </table>
@@ -422,11 +467,13 @@
       data.forEach((b, index) => {
         const birthdayDisplay = b.birthday || "Tarix əlavə edilməyib";
         const birthdayClass = b.birthday ? "" : "no-date";
+        const status = getBirthdayStatus(b.birthday);
+        const statusEmoji = getStatusEmoji(status);
         
         tbody.innerHTML += `
-          <tr>
+          <tr class="${status}-birthday">
             <td>${index + 1}</td>
-            <td>${b.name}</td>
+            <td>${b.name}${statusEmoji}</td>
             <td class="${birthdayClass}">${birthdayDisplay}</td>
             <td>
               <button class="btn edit" onclick="editBirthday(${index})" style="background: orange; color: white; margin-right: 5px;">✏️</button>
@@ -593,6 +640,45 @@
         return `${parts[2]}-${parts[1]}-${parts[0]}`;
       }
       return dateString;
+    }
+
+    function getBirthdayStatus(dateString) {
+      if (!dateString) return 'empty';
+      
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      
+      // Create birthday date for current year
+      const birthdayDate = new Date(dateString);
+      birthdayDate.setFullYear(currentYear);
+      
+      // Reset time to start of day for accurate comparison
+      today.setHours(0, 0, 0, 0);
+      birthdayDate.setHours(0, 0, 0, 0);
+      
+      const timeDiff = birthdayDate.getTime() - today.getTime();
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      
+      if (daysDiff === 0) {
+        return 'today';
+      } else if (daysDiff < 0) {
+        return 'past';
+      } else {
+        return 'future';
+      }
+    }
+
+    function getStatusEmoji(status) {
+      switch(status) {
+        case 'today':
+          return ' 🎉';
+        case 'future':
+          return ' ⏰';
+        case 'past':
+          return ' ✅';
+        default:
+          return '';
+      }
     }
 
     function showNotification(message, type) {
