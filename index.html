@@ -287,6 +287,11 @@
   <div class="container">
     <h1>🎉 Doğum Günləri 🎉</h1>
     
+    <!-- Debug Section -->
+    <div style="text-align: center; margin-bottom: 20px;">
+      <button onclick="clearStorage()" style="background: #ff4757; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px;">🗑️ localStorage Təmizlə</button>
+      <button onclick="testSave()" style="background: #2ed573; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px;">🧪 Test Save</button>
+    </div>
     
     <!-- Add New Entry Form -->
     <div class="add-form">
@@ -344,6 +349,9 @@
 
     // Initialize the application
     function init() {
+      // Clear localStorage for testing (remove this line after fixing)
+      // localStorage.clear();
+      
       loadData();
       renderTable();
     }
@@ -504,8 +512,15 @@
       birthdays.push(newBirthday);
       console.log('Added new birthday:', newBirthday);
       console.log('Current birthdays array:', birthdays);
+      console.log('Array length:', birthdays.length);
       
+      // Force save and verify
       saveData();
+      
+      // Verify data was saved
+      const savedData = localStorage.getItem('birthdays');
+      console.log('Saved data verification:', savedData);
+      
       renderTable();
       
       // Clear form
@@ -645,6 +660,24 @@
       if (event.target === modal) {
         closeModal();
       }
+    }
+
+    // Debug functions
+    function clearStorage() {
+      localStorage.clear();
+      console.log('localStorage cleared');
+      showNotification('localStorage təmizləndi!', 'info');
+      loadData();
+      renderTable();
+    }
+    
+    function testSave() {
+      const testData = [{ name: "Test", date: "2024-01-01" }];
+      localStorage.setItem('birthdays', JSON.stringify(testData));
+      console.log('Test data saved:', testData);
+      showNotification('Test məlumatı saxlanıldı!', 'success');
+      loadData();
+      renderTable();
     }
 
     // Initialize the application when page loads
