@@ -289,8 +289,8 @@
     
     <!-- Debug Section -->
     <div style="text-align: center; margin-bottom: 20px;">
-      <button onclick="clearStorage()" style="background: #ff4757; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px;">🗑️ localStorage Təmizlə</button>
-      <button onclick="testSave()" style="background: #2ed573; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px;">🧪 Test Save</button>
+      <button onclick="downloadData()" style="background: #2ed573; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px;">📥 JSON Faylını Yüklə</button>
+      <button onclick="reloadData()" style="background: #1e90ff; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px;">🔄 Məlumatları Yenilə</button>
     </div>
     
     <!-- Add New Entry Form -->
@@ -348,45 +348,23 @@
     let editingIndex = -1;
 
     // Initialize the application
-    function init() {
-      // Clear localStorage for testing (remove this line after fixing)
-      // localStorage.clear();
-      
-      loadData();
+    async function init() {
+      await loadData();
       renderTable();
     }
 
-    // Load data from localStorage or use default data
-    function loadData() {
+    // Load data from JSON file
+    async function loadData() {
       try {
-        const savedData = localStorage.getItem('birthdays');
-        console.log('Loaded data from localStorage:', savedData);
-        if (savedData) {
-          birthdays = JSON.parse(savedData);
-          console.log('Parsed birthdays:', birthdays);
+        const response = await fetch('data.json');
+        if (response.ok) {
+          birthdays = await response.json();
+          console.log('Loaded data from JSON file:', birthdays);
         } else {
-        // Default data
-        birthdays = [
-          { name: "Günay Hacıyeva", date: "1999-09-07" },
-          { name: "Aytan Nazarova", date: "1998-02-13" },
-          { name: "Günel Hüseynzade", date: "2001-01-12" },
-          { name: "Aysel Şərkerli", date: "1997-12-12" },
-          { name: "Narmin Asadova", date: "1993-09-15" },
-          { name: "Parvana", date: "1988-06-20" },
-          { name: "Aysel Qarayevа", date: "" },
-          { name: "Rasim Ağazade", date: "1985-11-12" },
-          { name: "Baba Ağayev", date: "1989-11-03" },
-          { name: "Rasim Həmidi", date: "1994-02-19" },
-          { name: "Kenan Dadaşov", date: "" },
-          { name: "Nicat", date: "" },
-          { name: "Elnur", date: "" },
-          { name: "Emin", date: "" },
-          { name: "Aytac", date: "" }
-        ];
-        saveData();
+          throw new Error('Failed to load JSON file');
         }
       } catch (error) {
-        console.error('Error loading from localStorage:', error);
+        console.error('Error loading from JSON file:', error);
         // Fallback to default data
         birthdays = [
           { name: "Günay Hacıyeva", date: "1999-09-07" },
@@ -408,13 +386,28 @@
       }
     }
 
-    // Save data to localStorage
+    // Save data to JSON file (download)
     function saveData() {
       try {
-        localStorage.setItem('birthdays', JSON.stringify(birthdays));
-        console.log('Data saved to localStorage:', birthdays);
+        const dataStr = JSON.stringify(birthdays, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = 'data.json';
+        link.style.display = 'none';
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log('Data saved to JSON file:', birthdays);
+        showNotification('Məlumatlar JSON faylına yükləndi!', 'success');
       } catch (error) {
-        console.error('Error saving to localStorage:', error);
+        console.error('Error saving to JSON file:', error);
+        showNotification('JSON faylı yüklənərkən xəta baş verdi!', 'error');
       }
     }
 
@@ -514,12 +507,8 @@
       console.log('Current birthdays array:', birthdays);
       console.log('Array length:', birthdays.length);
       
-      // Force save and verify
+      // Save to JSON file
       saveData();
-      
-      // Verify data was saved
-      const savedData = localStorage.getItem('birthdays');
-      console.log('Saved data verification:', savedData);
       
       renderTable();
       
@@ -663,21 +652,14 @@
     }
 
     // Debug functions
-    function clearStorage() {
-      localStorage.clear();
-      console.log('localStorage cleared');
-      showNotification('localStorage təmizləndi!', 'info');
-      loadData();
-      renderTable();
+    function downloadData() {
+      saveData();
     }
     
-    function testSave() {
-      const testData = [{ name: "Test", date: "2024-01-01" }];
-      localStorage.setItem('birthdays', JSON.stringify(testData));
-      console.log('Test data saved:', testData);
-      showNotification('Test məlumatı saxlanıldı!', 'success');
-      loadData();
+    async function reloadData() {
+      await loadData();
       renderTable();
+      showNotification('Məlumatlar yeniləndi!', 'success');
     }
 
     // Initialize the application when page loads
