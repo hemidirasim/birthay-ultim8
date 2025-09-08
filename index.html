@@ -387,9 +387,19 @@
 
     async function loadData() {
       try {
+        // First try to load from localStorage
+        const localData = localStorage.getItem('birthdays');
+        if (localData) {
+          const data = JSON.parse(localData);
+          localStorage.setItem('currentData', JSON.stringify(data));
+          renderTable(data);
+        }
+        
+        // Then try to fetch from server
         const res = await fetch(API_URL);
         if (res.ok) {
           const data = await res.json();
+          localStorage.setItem('birthdays', JSON.stringify(data));
           localStorage.setItem('currentData', JSON.stringify(data));
           renderTable(data);
         } else {
@@ -397,6 +407,12 @@
         }
       } catch (error) {
         console.error('Load error:', error);
+        // Fallback to localStorage if server fails
+        const localData = localStorage.getItem('birthdays');
+        if (localData) {
+          const data = JSON.parse(localData);
+          renderTable(data);
+        }
       }
     }
 
@@ -431,20 +447,34 @@
       
       try {
         const formattedDate = formatDateForDisplay(birthday);
-        const response = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, birthday: formattedDate })
-        });
-        if (response.ok) {
-          document.getElementById("name").value = "";
-          document.getElementById("birthday").value = "";
-          loadData();
-          showNotification('Doğum günü uğurla əlavə edildi!', 'success');
-        } else {
-          console.error('Add failed:', response.status);
-          showNotification('Əlavə etmə uğursuz oldu!', 'error');
+        const newEntry = { id: Date.now(), name, birthday: formattedDate };
+        
+        // Add to localStorage immediately
+        const localData = JSON.parse(localStorage.getItem('birthdays') || '[]');
+        localData.push(newEntry);
+        localStorage.setItem('birthdays', JSON.stringify(localData));
+        localStorage.setItem('currentData', JSON.stringify(localData));
+        
+        // Update UI immediately
+        renderTable(localData);
+        document.getElementById("name").value = "";
+        document.getElementById("birthday").value = "";
+        showNotification('Doğum günü uğurla əlavə edildi!', 'success');
+        
+        // Try to sync with server
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, birthday: formattedDate })
+          });
+          if (!response.ok) {
+            console.log('Server sync failed, but data saved locally');
+          }
+        } catch (serverError) {
+          console.log('Server unavailable, but data saved locally');
         }
+        
       } catch (error) {
         console.error('Add error:', error);
         showNotification('Xəta baş verdi!', 'error');
@@ -474,24 +504,34 @@
       }
       
       try {
-        const data = JSON.parse(localStorage.getItem('currentData') || '[]');
+        const data = JSON.parse(localStorage.getItem('birthdays') || '[]');
         const birthday = data[editingIndex];
         const formattedDate = date ? formatDateForDisplay(date) : '';
         
-        const response = await fetch(`${API_URL}/${birthday.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, birthday: formattedDate })
-        });
+        // Update localStorage immediately
+        data[editingIndex] = { ...birthday, name, birthday: formattedDate };
+        localStorage.setItem('birthdays', JSON.stringify(data));
+        localStorage.setItem('currentData', JSON.stringify(data));
         
-        if (response.ok) {
-          closeModal();
-          loadData();
-          showNotification('Doğum günü uğurla yeniləndi!', 'success');
-        } else {
-          console.error('Edit failed:', response.status);
-          showNotification('Yeniləmə uğursuz oldu!', 'error');
+        // Update UI immediately
+        closeModal();
+        renderTable(data);
+        showNotification('Doğum günü uğurla yeniləndi!', 'success');
+        
+        // Try to sync with server
+        try {
+          const response = await fetch(`${API_URL}/${birthday.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, birthday: formattedDate })
+          });
+          if (!response.ok) {
+            console.log('Server sync failed, but data saved locally');
+          }
+        } catch (serverError) {
+          console.log('Server unavailable, but data saved locally');
         }
+        
       } catch (error) {
         console.error('Edit error:', error);
         showNotification('Xəta baş verdi!', 'error');
@@ -511,14 +551,26 @@
 
     async function deleteBirthday(id) {
       try {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        if (response.ok) {
-          loadData();
-          showNotification('Doğum günü uğurla silindi!', 'success');
-        } else {
-          console.error('Delete failed:', response.status);
-          showNotification('Silinmə uğursuz oldu!', 'error');
+        // Delete from localStorage immediately
+        const data = JSON.parse(localStorage.getItem('birthdays') || '[]');
+        const filteredData = data.filter(b => b.id != id);
+        localStorage.setItem('birthdays', JSON.stringify(filteredData));
+        localStorage.setItem('currentData', JSON.stringify(filteredData));
+        
+        // Update UI immediately
+        renderTable(filteredData);
+        showNotification('Doğum günü uğurla silindi!', 'success');
+        
+        // Try to sync with server
+        try {
+          const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+          if (!response.ok) {
+            console.log('Server sync failed, but data deleted locally');
+          }
+        } catch (serverError) {
+          console.log('Server unavailable, but data deleted locally');
         }
+        
       } catch (error) {
         console.error('Delete error:', error);
         showNotification('Xəta baş verdi!', 'error');
