@@ -176,24 +176,25 @@
     
     /* Past birthday styling */
     .past-birthday {
-      background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
-      color: #666;
-      opacity: 0.8;
+      background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+      color: #721c24;
+      border-left: 4px solid #dc3545;
     }
     
     .past-birthday:hover {
-      background: linear-gradient(135deg, #d4edda, #c3e6cb);
+      background: linear-gradient(135deg, #f5c6cb, #f1b0b7);
     }
     
     /* Future birthday styling */
     .future-birthday {
-      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-      color: #856404;
+      background: linear-gradient(135deg, #d4edda, #c3e6cb);
+      color: #155724;
+      border-left: 4px solid #28a745;
       font-weight: bold;
     }
     
     .future-birthday:hover {
-      background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+      background: linear-gradient(135deg, #c3e6cb, #b8dacc);
     }
     
     /* Today's birthday styling */
@@ -201,7 +202,9 @@
       background: linear-gradient(135deg, #ff6b6b, #ee5a24);
       color: white;
       font-weight: bold;
+      border-left: 4px solid #ff0000;
       animation: pulse 2s infinite;
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
     }
     
     .today-birthday:hover {
@@ -554,7 +557,7 @@
       </tr>
       <tr style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-size: 12px; color: #666;">
         <th colspan="4" style="text-align: center; padding: 8px;">
-          🎉 Bu gün | ⏰ Gələcək | ✅ Keçmiş | 📝 Tarix yoxdur
+          🎉 Bu gün (Qırmızı) | ⏰ Gələcək (Yaşıl) | ✅ Keçmiş (Çəhrayı) | 📝 Tarix yoxdur (Ağ)
         </th>
       </tr>
     </thead>
@@ -945,14 +948,21 @@
     }
 
     function getBirthdayStatus(dateString) {
-      if (!dateString) return 'empty';
+      if (!dateString || dateString === "Tarix əlavə edilməyib") return 'empty';
       
       const today = new Date();
       const currentYear = today.getFullYear();
       
+      // Parse DD.MM.YYYY format
+      const parts = dateString.split('.');
+      if (parts.length !== 3) return 'empty';
+      
+      const day = parseInt(parts[0]);
+      const month = parseInt(parts[1]) - 1; // JavaScript months are 0-based
+      const year = parseInt(parts[2]);
+      
       // Create birthday date for current year
-      const birthdayDate = new Date(dateString);
-      birthdayDate.setFullYear(currentYear);
+      const birthdayDate = new Date(currentYear, month, day);
       
       // Reset time to start of day for accurate comparison
       today.setHours(0, 0, 0, 0);
