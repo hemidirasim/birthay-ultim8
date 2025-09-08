@@ -537,7 +537,7 @@
       </tr>
       <tr style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-size: 12px; color: #666;">
         <th colspan="4" style="text-align: center; padding: 8px;">
-          ⏰ Gələcək (Yaşıl) | ✅ Keçmiş (Çəhrayı)
+          ⏰ Gələcək (Yaşıl) - Yaxından uzağa | ✅ Keçmiş (Çəhrayı) - Ən yaxın keçmiş
         </th>
       </tr>
     </thead>
@@ -723,7 +723,37 @@
     function renderTable(data) {
       const tbody = document.getElementById("table-body");
       tbody.innerHTML = "";
-      data.forEach((b, index) => {
+      
+      // Sort data: future birthdays first (closest to furthest), then past birthdays
+      const sortedData = [...data].sort((a, b) => {
+        const statusA = getBirthdayStatus(a.birthday);
+        const statusB = getBirthdayStatus(b.birthday);
+        
+        // Future birthdays come first
+        if (statusA === 'future' && statusB === 'past') return -1;
+        if (statusA === 'past' && statusB === 'future') return 1;
+        
+        // If both are future or both are past, sort by date
+        if (statusA === statusB) {
+          if (!a.birthday || !b.birthday) return 0;
+          
+          const dateA = parseDateForSorting(a.birthday);
+          const dateB = parseDateForSorting(b.birthday);
+          
+          if (statusA === 'future') {
+            // For future: closest first (ascending)
+            return dateA - dateB;
+          } else {
+            // For past: most recent first (descending)
+            return dateB - dateA;
+          }
+        }
+        
+        return 0;
+      });
+      
+      sortedData.forEach((b, index) => {
+        const originalIndex = data.findIndex(item => item.id === b.id);
         const birthdayDisplay = b.birthday || "Tarix əlavə edilməyib";
         const birthdayClass = b.birthday ? "" : "no-date";
         const status = getBirthdayStatus(b.birthday);
@@ -735,7 +765,7 @@
             <td>${b.name}${statusEmoji}</td>
             <td class="${birthdayClass}">${birthdayDisplay}</td>
             <td>
-              <button class="btn edit" onclick="editBirthday(${index})" style="background: orange; color: white; margin-right: 5px;">✏️</button>
+              <button class="btn edit" onclick="editBirthday(${originalIndex})" style="background: orange; color: white; margin-right: 5px;">✏️</button>
               <button class="btn delete" onclick="confirmDelete(${b.id}, '${b.name}')">🗑️</button>
             </td>
           </tr>
@@ -925,6 +955,26 @@
         return `${parts[2]}-${parts[1]}-${parts[0]}`;
       }
       return dateString;
+    }
+
+    function parseDateForSorting(dateString) {
+      if (!dateString || dateString === "Tarix əlavə edilməyib") return 0;
+      
+      const parts = dateString.split('.');
+      if (parts.length !== 3) return 0;
+      
+      const day = parseInt(parts[0]);
+      const month = parseInt(parts[1]) - 1; // JavaScript months are 0-based
+      const year = parseInt(parts[2]);
+      
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      
+      // Create birthday date for current year
+      const birthdayDate = new Date(currentYear, month, day);
+      
+      // Return timestamp for sorting
+      return birthdayDate.getTime();
     }
 
     function getBirthdayStatus(dateString) {
