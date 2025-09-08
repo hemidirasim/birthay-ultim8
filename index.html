@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Doğum Günləri - 2025</title>
+  <title>Doğum Günləri</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -225,30 +225,6 @@
       background: linear-gradient(135deg, #45a049, #3d8b40);
     }
     
-    /* Export/Import buttons */
-    .export-import {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      justify-content: center;
-    }
-    .export-btn, .import-btn {
-      background: linear-gradient(135deg, #9c27b0, #7b1fa2);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-    .export-btn:hover, .import-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
-    }
-    .file-input {
-      display: none;
-    }
     
     /* Responsive */
     @media (max-width: 768px) {
@@ -267,22 +243,13 @@
       h1 {
         font-size: 2em;
       }
-      .export-import {
-        flex-direction: column;
-      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🎉 Doğum Günləri - 2025 🎉</h1>
+    <h1>🎉 Doğum Günləri 🎉</h1>
     
-    <!-- Export/Import Section -->
-    <div class="export-import">
-      <button class="export-btn" onclick="exportData()">📤 JSON Faylını Yüklə</button>
-      <button class="import-btn" onclick="document.getElementById('fileInput').click()">📥 JSON Faylını Yüklə</button>
-      <input type="file" id="fileInput" class="file-input" accept=".json" onchange="importData(event)">
-    </div>
     
     <!-- Add New Entry Form -->
     <div class="add-form">
@@ -474,45 +441,6 @@
       editingIndex = -1;
     }
 
-    // Export data to JSON file
-    function exportData() {
-      const dataStr = JSON.stringify(birthdays, null, 2);
-      const dataBlob = new Blob([dataStr], {type: 'application/json'});
-      
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(dataBlob);
-      link.download = 'dogum_gunleri.json';
-      link.click();
-      
-      showNotification('JSON faylı uğurla yükləndi!', 'success');
-    }
-
-    // Import data from JSON file
-    function importData(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const importedData = JSON.parse(e.target.result);
-          if (Array.isArray(importedData)) {
-            birthdays = importedData;
-            saveData();
-            renderTable();
-            showNotification('JSON faylı uğurla yükləndi!', 'success');
-          } else {
-            throw new Error('Invalid data format');
-          }
-        } catch (error) {
-          alert('JSON faylı düzgün formatda deyil!');
-        }
-      };
-      reader.readAsText(file);
-      
-      // Reset file input
-      event.target.value = '';
-    }
 
     // Show notification
     function showNotification(message, type) {
