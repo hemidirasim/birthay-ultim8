@@ -1,16 +1,7 @@
 {
-  "functions": {
-    "api/birthdays.js": {
-      "maxDuration": 10
-    }
-  },
   "rewrites": [
     {
       "source": "/birthdays",
-      "destination": "/api/birthdays"
-    },
-    {
-      "source": "/birthdays/(.*)",
       "destination": "/api/birthdays"
     }
   ]
