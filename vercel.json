@@ -3,6 +3,10 @@
     {
       "source": "/birthdays",
       "destination": "/api/birthdays"
+    },
+    {
+      "source": "/birthdays/(.*)",
+      "destination": "/api/birthdays"
     }
   ]
 }
